@@ -1,10 +1,15 @@
 URL: https://github.com/auth0/native-mobile-samples/tree/b378ef05544d94ac5dda369ebb4102cd3dc9bbfa/Android/basic-sample
 Version: b378ef0
-License:
-License File:
+License: MIT
+License File: LICENSE
 
 Description:
-Auth0 Android example
+Auth0 Android example that calls Endpoints.
 
 Local Modifications:
-No Modifications
+LICENSE file has been created for compliance purposes. Not included in
+original distribution.
+
+LICENSE file was extracted from build.gradle.
+
+Other modifications, please see git log.

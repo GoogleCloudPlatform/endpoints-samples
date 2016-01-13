@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.auth0.core.UserProfile;
+import com.auth0.core.Token;
 import com.auth0.lock.Lock;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -46,7 +47,9 @@ import org.apache.http.Header;
 
 public class ProfileActivity extends ActionBarActivity {
 
-    private static final String SAMPLE_API_URL = "http://localhost:3001/secured/ping";
+    // Please change to your API endpoint and API Key if needed.
+    private static final String API_URL =
+        "https://endpoints-bookstore-node.appspot.com/shelves/1";
     private static final String TAG = ProfileActivity.class.getName();
 
     AsyncHttpClient client;
@@ -56,6 +59,7 @@ public class ProfileActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         UserProfile profile = getIntent().getParcelableExtra(Lock.AUTHENTICATION_ACTION_PROFILE_PARAMETER);
+        Token token = getIntent().getParcelableExtra(Lock.AUTHENTICATION_ACTION_TOKEN_PARAMETER);
         TextView greetingTextView = (TextView) findViewById(R.id.welcome_message);
         greetingTextView.setText("Welcome " + profile.getName());
         ImageView profileImageView = (ImageView) findViewById(R.id.profile_image);
@@ -64,6 +68,7 @@ public class ProfileActivity extends ActionBarActivity {
         }
 
         client = new AsyncHttpClient();
+        client.addHeader("Authorization", "Bearer " + token.getIdToken());
         Button callAPIButton = (Button) findViewById(R.id.call_api_button);
         callAPIButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,17 +79,25 @@ public class ProfileActivity extends ActionBarActivity {
     }
 
     private void callAPI() {
-        client.get(this, SAMPLE_API_URL, new AsyncHttpResponseHandler() {
+        client.get(this, API_URL, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.v(TAG, "We got the secured data successfully");
-                showAlertDialog(ProfileActivity.this, "We got the secured data successfully");
+                try {
+                  showAlertDialog(ProfileActivity.this, "We got the secured data successfully\n" + new String(responseBody, "UTF-8"));
+                } catch (Exception e) {
+                  throw new RuntimeException(e);
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Log.e(TAG, "Failed to contact API", error);
-                showAlertDialog(ProfileActivity.this, "Please download the API seed so that you can call it.");
+                try {
+                  showAlertDialog(ProfileActivity.this, "Call API failed\n" + new String(responseBody, "UTF-8"));
+                } catch (Exception e) {
+                  throw new RuntimeException(e);
+                }
             }
         });
     }

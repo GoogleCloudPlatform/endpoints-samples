@@ -24,8 +24,8 @@
   -->
 
 <resources>
-    <string name="auth0_client_id">{CLIENT_ID}</string>
-    <string name="auth0_scheme">{MOBILE_CUSTOM_SCHEME}</string>
-    <string name="auth0_domain">{DOMAIN}</string>
-    <string name="facebook_app_id">696506353719958</string>
+    <string name="auth0_client_id">Uuts8fJWf1yieO9Ocv0Uk6LBqsUTePQq</string>
+    <string name="auth0_scheme">a0uuts8fjwf1yieo9ocv0uk6lbqsutepqq</string>
+    <string name="auth0_domain">esp-jwk.auth0.com</string>
+    <string name="facebook_app_id">1514700005521602</string>
 </resources>
