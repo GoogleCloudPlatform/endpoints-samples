@@ -1,10 +1,15 @@
 URL: https://github.com/auth0/node-auth0/tree/03727f3cfdffcb219c28cc9f3933371862654da4/examples/nodejs-regular-webapp
 Version: 03727f3
-License:
-License File:
+License: MIT
+License File: LICENSE
 
 Description:
-Auth0 NodeJS regular webapp example
+Auth0 NodeJS regular webapp that calls Endpoints.
 
 Local Modifications:
-No Modifications
+LICENSE file has been created for compliance purposes. Not included in
+original distribution.
+
+LICENSE file was extracted from package.json.
+
+Other modifications, please see git log.

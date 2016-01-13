@@ -1,7 +1,7 @@
 {
   "name": "auth0-nodejs-regular-webapp-sample",
   "version": "1.0.0",
-  "description": "Auth0 + NodeJS Regular WebApp seed",
+  "description": "Auth0 + Node.js Regular WebApp seed",
   "repository": "git://github.com/auth0/node-auth0",
   "author": "Auth0",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "morgan": "~1.6.1",
     "passport": "^0.3.0",
     "passport-auth0": "^0.5.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "request": "~2.58.0"
   }
 }
