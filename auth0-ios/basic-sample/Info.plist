@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>Auth0ClientId</key>
-	<string>{CLIENT_ID}</string>
+	<string>Uuts8fJWf1yieO9Ocv0Uk6LBqsUTePQq</string>
 	<key>Auth0Domain</key>
-	<string>{DOMAIN}</string>
+	<string>esp-jwk.auth0.com</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -31,20 +31,20 @@
 			<string>facebook</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb696506353719958</string>
+				<string>fb1514700005521602</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FacebookAppID</key>
-	<string>696506353719958</string>
+	<string>1514700005521602</string>
 	<key>FacebookDisplayName</key>
 	<string>Auth0 Sample</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>SampleAPIBaseURL</key>
-	<string>http://localhost:3001/secured/ping</string>
+	<string>https://endpoints-bookstore-node.appspot.com/shelves/1</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -56,6 +56,10 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbauth2</string>
 	</array>
 </dict>
 </plist>

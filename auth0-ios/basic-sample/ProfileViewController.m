@@ -50,7 +50,7 @@
     NSURLRequest *request = [self buildAPIRequest];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [self showMessage:@"We got the secured data successfully"];
+        [self showMessage:[NSString stringWithFormat:@"We got the secured data successfully\n%@", operation.responseString]];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [self showMessage:@"Please download the API seed so that you can call it."];
     }];

@@ -1,17 +1,46 @@
-# Auth0 + iOS + API Seed
+# Google Cloud Endpoints Auth0 iOS Client
 
-This is the seed project you need to use if you're going to create an app that will use Auth0, iOS with Objective C and an API that you're going to be developing. That API can be in any language.
+This is a fork of
+[native-mobile-samples](https://github.com/auth0/native-mobile-samples/tree/59f556ddb5741fd06c4aa792ec82c3a2f828b30e/iOS/basic-sample).
+Please see callAPI() in `basic-sample/ProfileViewController.m` for how to make
+a request to Endpoints.
 
-## Configuring the example
+In order to run the example, you'll need to be familiar with how to
+deploy the sample
+[Node.js app](/examples/nodejs/bookstore/README.md), found in
+[examples/nodejs/bookstore](/examples/nodejs/bookstore).
+See the [README](/examples/nodejs/bookstore/README.md) for more details.
 
-You must set your Auht0 `ClientId` and `Tenant` in this sample so that it works. For that, just open the `basic-sample/Info.plist` file and replace the `{CLIENT_ID}` and `{TENANT}` fields with your account information.
+## API Server configurations
 
-## Running the example
+Follow Initial Setup Instructions, Auth0 Symmetric key encryption Instructions
+or Auth0 Asymmetric key encryption Instructions described in
+[third_party/examples/client/auth0/README.md](/third_party/examples/client/auth0/README.md).
 
-In order to run the project, you need to have `XCode` installed.
-Once you have that, just clone the project and run the following:
+## Build and run your iOS App
 
-1. `pod install`
-2. `open basic-sample.xcworkspace`
+In order to run the project, you need to have `XCode` installed. Once you have
+that, install project dependencies and open the project workspace:
 
-Enjoy your iOS app now :).
+    sudo gem install cocoapods
+    pod install
+    open basic-sample.xcworkspace
+
+To support Facebook login, you need to register a Facebook app
+ID/secret, enable it for Android platform, and lastly configure it in
+Auth0 connections. Please see this
+[link](https://auth0.com/docs/connections/social/facebook) for
+detailed instructions.
+
+From the
+[third_party/examples/client/auth0-ios](/third_party/examples/client/auth0-ios)
+directory, edit [basic-sample/Info.plist](basic-sample/Info.plist).
+
+1. Change `SampleAPIBaseURL` to the address of your deployed application.
+2. Update `Auth0ClientId`, `Auth0Domain`, `FacebookAppID`,
+   `FacebookDisplayName` (if applicable) fields with the values from your
+   API's Auth0 dashboard.
+
+Below is an example of the app after a successful request.
+
+![an example of the app after a successful request](auth0_ios.png)
