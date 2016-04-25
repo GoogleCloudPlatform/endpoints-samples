@@ -8,16 +8,16 @@ angular.module( 'sample.home', [
   $scope.callApi = function() {
     // Just call the API as you'd do using $http
     $http({
-      url: 'http://localhost:3001/secured/ping',
+      url: 'https://endpoints-bookstore-node.appspot.com/shelves/1',
       method: 'GET'
-    }).then(function() {
-      alert("We got the secured data successfully");
+    }).then(function(response) {
+      alert('Response: ' + JSON.stringify(response.data));
     }, function(response) {
       if (response.status == -1) {
-        alert("Please download the API seed so that you can call it.");
+        alert('Failure: ' + response.statusText);
       }
       else {
-        alert(response.data);
+        alert('Failure: ' + response.data);
       }
     });
   }
