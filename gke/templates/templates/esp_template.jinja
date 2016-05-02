@@ -1,0 +1,113 @@
+# Copyright 2016 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% set PROXY_PORT = properties['proxy_port'] or 8080 %}
+{% set SSL = properties['ssl'] or False %}
+{% set SSL_PORT = properties['ssl_port'] or 443 %}
+{% set API_PORT = properties['api_port'] or 8081 %}
+{% set SERVICE_NAME = properties['service_name'] %}
+{% set SERVICE_VERSION = properties['service_version'] %}
+{% set REPLICAS = properties['replicas'] or 1 %}
+{% set API_IMAGE = properties['api_image'] %}
+{% set CUSTOM_CONFIG = properties['custom_nginx_config'] or False %}
+{% set REPLICAS = properties['replicas'] or 1 %}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ SERVICE_NAME }}
+spec:
+  ports:
+  - port: {{ PROXY_PORT }}
+    protocol: TCP
+    name: http
+  {% if SSL %}
+  - port: {{ SSL_PORT }}
+    protocol: TCP
+    name: https
+  {% endif %}
+  selector:
+    app: {{ SERVICE_NAME }}
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: {{ SERVICE_NAME }}
+spec:
+  replicas: {{ REPLICAS }}
+  selector:
+    app: {{ SERVICE_NAME }}
+  template:
+    metadata:
+      labels:
+        app: {{ SERVICE_NAME }}
+    spec:
+      {% if CUSTOM_CONFIG or SSL %}
+      volumes:
+      {% if CUSTOM_CONFIG %}
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      {% endif %}
+      {% if SSL %}
+      - name: nginx-ssl
+        secret:
+          secretName: nginx-ssl
+      {% endif %}
+      {% endif %}
+      containers:
+        - name: esp
+          image: b.gcr.io/endpoints/endpoints-runtime:0.2
+          args: [
+              {% if CUSTOM_CONFIG %}
+              "-n",
+              "/etc/nginx/custom/nginx.conf",
+              {% else %}
+              "-p",
+              "{{ PROXY_PORT }}",
+              {% if SSL %}
+              "-S",
+              "{{ SSL_PORT }}",
+              {% endif %}
+              "-a",
+              "localhost:{{ API_PORT }}",
+              {% endif %}
+              "-s",
+              "{{ SERVICE_NAME }}",
+              "-v",
+              "{{ SERVICE_VERSION }}",
+          ]
+          ports:
+            - containerPort: {{ PROXY_PORT }}
+            {% if SSL %}
+            - containerPort: {{ SSL_PORT }}
+            {% endif %}
+          {% if CUSTOM_CONFIG or SSL %}
+          volumeMounts:
+            {% if CUSTOM_CONFIG %}
+            - mountPath: /etc/nginx/custom
+              name: nginx-config
+              readOnly: true
+            {% endif %}
+            {% if SSL %}
+            - mountPath: /etc/nginx/ssl
+              name: nginx-ssl
+              readOnly: true
+            {% endif %}
+          {% endif %}
+        - name: {{ SERVICE_NAME }}
+          image: {{ API_IMAGE }}
+          ports:
+            - containerPort: {{ API_PORT }}

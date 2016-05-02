@@ -1,0 +1,58 @@
+# Copyright 2016 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+imports:
+  - name: globally_available_service
+    type: globally_available_service.py
+
+resources:
+  - name: my-api-backend
+    type: globally_available_service
+    properties:
+      instance_template:
+        disks:
+          - boot: True
+            initializeParams:
+              diskName: 'my-boot-disk'
+              sourceImage: 'projects/ubuntu-os-cloud/global/images/ubuntu-1404-trusty-v20160406'
+        machineType: n1-standard1
+        metadata:
+          items:
+            - key: endpoints-service-name
+              value: my-api.example.com
+            - key: endpoints-service-generation
+              value: '0'
+            - key: startup-script-url
+              value: gs://endpoints-test-bucket/startup.sh
+            - key: nginx-conf-url
+              value: gs://endpoints-test-bucket/nginx.conf
+        networkInterfaces:
+            - network: global/networks/default
+      port: 8080
+      health_check:
+        requestPath: '/echo'
+      zones:
+        - us-central1-a
+        - us-east1-c
+        - europe-west1-b
+        - asia-east1-c
+      autoscaler:
+        autoscalingPolicy:
+           minNumReplicas: 1
+           maxNumReplicas: 3
+           loadBalancingUtilization:
+              utilizationTarget: 0.5
+      backend_service_template:
+          balancingMode: 'UTILIZATION'
+          maxRate: 100 # QPS
