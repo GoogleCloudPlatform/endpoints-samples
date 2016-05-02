@@ -25,7 +25,7 @@ resources:
           - boot: True
             initializeParams:
               diskName: 'my-boot-disk'
-              sourceImage: 'projects/ubuntu-os-cloud/global/images/ubuntu-1404-trusty-v20160406'
+              sourceImage: 'projects/debian-cloud/global/images/debian-8-jessie-v20160418'
         machineType: n1-standard1
         metadata:
           items:

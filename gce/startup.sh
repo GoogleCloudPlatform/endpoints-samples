@@ -34,7 +34,7 @@ fi
 
 ### START YOUR SERVICE HERE ###
 
-sudo apt-get install -y git
+sudo apt-get install -y  build-essential libssl-dev libffi-dev python-dev git python-pip
 
 git clone https://github.com/GoogleCloudPlatform/python-docs-samples
 
@@ -43,8 +43,8 @@ virtualenv env
 source env/bin/activate
 pip install -r requirements.txt
 
-python main.py &> /var/logs/service.txt
+python main.py > /var/log/service.log &
 
 ###
 
-/usr/sbin/service start nginx
+sudo /usr/sbin/service nginx start

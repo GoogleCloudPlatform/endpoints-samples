@@ -33,4 +33,8 @@ If you want to customize the configuration of the ESP, you can also upload an `n
 
 For an example of a configuration you can see the [example config](./config.yaml). For a full accounting of options check out the [template schema](./globally_available_service.py.schema).
 
-In particular, make sure to replace the values under `metadata:` with your own values from Step 1 and 2.
+In particular, make sure to replace the values under `metadata:` with your own values from Step 1 and 2. Note, the only supported OS at this time is Debian-Jessie.
+
+## Step 4: Deploy your configuration
+
+Run `gcloud deployment-manager deployments create config.yaml` to deploy your configuration.
