@@ -13,26 +13,29 @@
 # limitations under the License.
 
 imports:
-  - name: globally_available_service
-    type: globally_available_service.py
+  - name: globally_available_service.py
+    path: ./globally_available_service.py
 
 resources:
   - name: my-api-backend
-    type: globally_available_service
+    type: globally_available_service.py
     properties:
       instance_template:
         disks:
           - boot: True
+            type: PERSISTENT
             initializeParams:
               diskName: 'my-boot-disk'
               sourceImage: 'projects/debian-cloud/global/images/debian-8-jessie-v20160418'
-        machineType: n1-standard1
+              diskSizeGb: 10
+              diskType: pd-ssd
+        machineType: n1-standard-1
         metadata:
           items:
             - key: endpoints-service-name
-              value: my-api.example.com
-            - key: endpoints-service-generation
-              value: '0'
+              value: endpoints-test-project.appspot.com
+            - key: endpoints-service-version
+              value: '2016-05-02R1'
             - key: startup-script-url
               value: gs://endpoints-test-bucket/startup.sh
             - key: nginx-conf-url

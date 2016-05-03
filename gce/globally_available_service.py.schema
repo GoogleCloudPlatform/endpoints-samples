@@ -15,27 +15,27 @@
 
 properties:
   instance_template:
-    description: Instance template to back your Zonal instance group managers
+    description: 'Instance template to back your Zonal instance group managers'
     type: object
   ssl_certificate:
-    description: Fully qualified URL to a deployed compute.v1.SslCertificate
+    description: 'Fully qualified URL to a deployed compute.v1.SslCertificate'
     type: string
   port:
-    description: Port to serve traffic on, and which will be proxied to your instances
+    description: 'Port to serve traffic on, and which will be proxied to your instances'
     type: integer
   health_check:
-    description: A Health check to determine instance and overall API health. Port and name do not need to be specified. See: https://cloud.google.com/compute/docs/reference/latest/httpHealthChecks
+    description: 'A Health check to determine instance and overall API health. Port and name do not need to be specified. See: https://cloud.google.com/compute/docs/reference/latest/httpHealthChecks'
     type: object
   zones:
-    description: A list of zones to deploy your autoscaled instance groups into
+    description: 'A list of zones to deploy your autoscaled instance groups into'
     type: array
     items:
       type: string
   autoscaler:
-    description: a compute.v1.autoscaler (the target field can be omitted)
+    description: 'a compute.v1.autoscaler (the target field can be omitted)'
     type: object
   backend_service_template:
-    description: a single backend load balancing configuration, omitting the group. This will be used as an load balancing configuration for each zone's instance group, see https://cloud.google.com/compute/docs/reference/latest/backendServices#resource (only the fields prefixed with backends[])
+    description: 'a single backend load balancing configuration, omitting the group. This will be used as an load balancing configuration for each instance group, see https://cloud.google.com/compute/docs/reference/latest/backendServices#resource (only the fields prefixed with backends[])'
 
 required:
   - instance_template
