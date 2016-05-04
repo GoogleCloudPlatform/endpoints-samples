@@ -41,3 +41,4 @@ required:
   - instance_template
   - zones
   - backend_service_template
+  - health_check
