@@ -26,15 +26,19 @@ echo "deb http://packages.cloud.google.com/apt $CLOUD_ENDPOINTS_REPO main" | sud
 curl --silent https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
 # Update and install the Cloud SDK
-sudo apt-get update && sudo apt-get install -y endpoints-runtime
+sudo apt-get update
+sudo apt-get install -y endpoints-runtime
 
 if [ $NGINX_CONF_URL ]; then
-    curl $NGINX_CONF_URL > /etc/nginx/nginx.conf
+    gsutil cp $NGINX_CONF_URL /etc/nginx/nginx.conf
 fi
+
+# Use restart in case there is a custom config
+sudo /usr/sbin/service nginx restart
 
 ### START YOUR SERVICE HERE ###
 
-sudo apt-get install -y  build-essential libssl-dev libffi-dev python-dev git python-pip
+sudo apt-get install -y  build-essential libssl-dev libffi-dev python-dev git python-pip gunicorn
 
 git clone https://github.com/GoogleCloudPlatform/python-docs-samples
 
@@ -43,8 +47,6 @@ virtualenv env
 source env/bin/activate
 pip install -r requirements.txt
 
-python main.py > /var/log/service.log &
-
+# 8081 is the default port to which the ESP proxies
+sudo gunicorn -b :8081 --access-logfile /var/log/service.log main:app &
 ###
-
-sudo /usr/sbin/service nginx start

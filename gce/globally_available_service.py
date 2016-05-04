@@ -62,15 +62,19 @@ def gen_target_proxy(name, url_map, cert=None):
         }
 
 
-def gen_firewall_rule(name, port):
-    return {
+def gen_firewall_rule(name, port, instance_template):
+    firewall_rule = {
         'name': name + '-firewall-rule',
         'type': 'compute.v1.firewall',
         'properties': {
             'allowed': [{'IPProtocol': 'tcp', 'ports': [port]}],
-            'sourceRanges': '0.0.0.0/0'
+            'sourceRanges': ['0.0.0.0/0'],
         }
     }
+    if 'tags' in instance_template['properties']:
+        firewall_rule['properties']['targetTags'] = instance_template[
+            'properties']['tags']
+    return firewall_rule
 
 
 def gen_target_pool(name, region, health_checks):
@@ -167,6 +171,7 @@ def gen_backend_service(name,
 
 def gen_instance_group_manager(name,
                                zone,
+                               port,
                                instance_template,
                                target_pool=None):
     return {
@@ -179,7 +184,11 @@ def gen_instance_group_manager(name,
             'zone': zone,
             'targetPools': [
                 SELF_LINK.format(target_pool['name'])
-            ] if target_pool else []
+            ] if target_pool else [],
+            'namedPorts': [{
+                'name': 'api-port',
+                'port': port
+            }]
         }
     }
 
@@ -214,21 +223,20 @@ def GenerateConfig(context):
     # Only need target pools if the user wants a health check
 
     health_check = None
-    target_pool = None
-    if health_check_template:
-        health_check = gen_health_check(
-            name, health_check_template, port, ssl=cert)
-        resources.append(health_check)
+    target_pools = dict()
+    regions = dict()
+    health_check = gen_health_check(
+        name, health_check_template, port, ssl=cert)
+    resources.append(health_check)
 
-        regions = {
-            zone: zone.rsplit('-', 1)[0]
-            for zone in context.properties['zones']
-        }
-        target_pools = dict()
-        for region in set(regions.values()):
-            target_pool = gen_target_pool(name, region, [health_check])
-            target_pools[region] = target_pool
-            resources.append(target_pool)
+    regions = {
+        zone: zone.rsplit('-', 1)[0]
+        for zone in context.properties['zones']
+    }
+    for region in set(regions.values()):
+        target_pool = gen_target_pool(name, region, [health_check])
+        target_pools[region] = target_pool
+        resources.append(target_pool)
 
     # Create a managed instance group in each zone
     igms = []
@@ -236,8 +244,9 @@ def GenerateConfig(context):
         igm = gen_instance_group_manager(
             name,
             zone,
+            port,
             instance_template,
-            target_pool=target_pools[regions[zone]]
+            target_pool=target_pools[regions[zone]] if target_pools else None
         )
         igms.append(igm)
         resources.append(igm)
@@ -276,5 +285,8 @@ def GenerateConfig(context):
         ip_address=context.properties.get('ip_address')
     )
     resources.append(forwarding_rule)
+
+    firewall_rule = gen_firewall_rule(name, port, instance_template)
+    resources.append(firewall_rule)
 
     return yaml.dump({'resources': resources})
