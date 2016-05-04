@@ -220,19 +220,17 @@ def GenerateConfig(context):
 
     health_check_template = context.properties.get('health_check')
 
-    # Only need target pools if the user wants a health check
-
-    health_check = None
-    target_pools = dict()
-    regions = dict()
+    # Create a health Check
     health_check = gen_health_check(
         name, health_check_template, port, ssl=cert)
     resources.append(health_check)
 
+    # Create a target pool using the health check in each region
     regions = {
         zone: zone.rsplit('-', 1)[0]
         for zone in context.properties['zones']
     }
+    target_pools = dict()
     for region in set(regions.values()):
         target_pool = gen_target_pool(name, region, [health_check])
         target_pools[region] = target_pool
@@ -246,7 +244,7 @@ def GenerateConfig(context):
             zone,
             port,
             instance_template,
-            target_pool=target_pools[regions[zone]] if target_pools else None
+            target_pool=target_pools[regions[zone]]
         )
         igms.append(igm)
         resources.append(igm)

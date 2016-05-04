@@ -41,13 +41,16 @@ resources:
         metadata:
           items:
             - key: endpoints-service-name
-              value: endpoints-test-project.appspot.com
+              value: MY-ENDPOINTS-PROJECT.appspot.com
             - key: endpoints-service-version
-              value: '2016-05-02R1'
+              value: MY-SERVICE-VERSION
             - key: startup-script-url
               value: gs://endpoints-test-project/startup.sh
         networkInterfaces:
             - network: global/networks/default
+              accessConfigs:
+                  - type: ONE_TO_ONE_NAT
+                    name: External NAT
       port: 8080
       health_check:
           path: '/'
