@@ -37,4 +37,4 @@ In particular, make sure to replace the values under `metadata:` with your own v
 
 ## Step 4: Deploy your configuration
 
-Run `gcloud deployment-manager deployments create config.yaml` to deploy your configuration.
+Run `gcloud deployment-manager deployments create [DEPLOYMENT_NAME] --config config.yaml` to deploy your configuration.
