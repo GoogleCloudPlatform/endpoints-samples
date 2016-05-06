@@ -12,47 +12,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: esp-bookstore
+  name: esp-echo
 spec:
   ports:
-  - port: 8080
+  - port: 80
+    targetPort: 8080
     protocol: TCP
     name: http
   - port: 443
     protocol: TCP
     name: https
   selector:
-    app: esp-bookstore
+    app: esp-echo
   type: LoadBalancer
 ---
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: esp-bookstore
+  name: esp-echo
 spec:
   replicas: 1
   selector:
-    app: esp-bookstore
+    app: esp-echo
   template:
     metadata:
       labels:
-        app: esp-bookstore
+        app: esp-echo
     spec:
       volumes:
-      - name: nginx-config
-        configMap:
-          name: nginx-config
       - name: nginx-ssl
         secret:
           secretName: nginx-ssl
       containers:
       - name: esp
-        image: b.gcr.io/endpoints/endpoints-runtime:debian-stable
+        image: b.gcr.io/endpoints/endpoints-runtime:0.2
         args: [
-          "-n", "/etc/nginx/custom/nginx.conf",
+          "-p", "8080",
+          "-S", "443",
+          "-a", "localhost:8081",
           "-s", "SERVICE_NAME",
           "-v", "SERVICE_VERSION",
         ]
@@ -63,10 +64,7 @@ spec:
         - mountPath: /etc/nginx/ssl
           name: nginx-ssl
           readOnly: true
-        - mountPath: /etc/nginx/custom
-          name: nginx-config
-          readOnly: true
-      - name: bookstore
-        image: b.gcr.io/endpoints/bookstore:latest
+      - name: echo
+        image: b.gcr.io/endpoints/echo:latest
         ports:
           - containerPort: 8081
