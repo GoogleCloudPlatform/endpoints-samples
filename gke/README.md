@@ -59,4 +59,4 @@ them with your own ssl key and certificate.
 
   * [echo docker image](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/managed_vms/endpoints/Dockerfile.container-engine)
 
-  * [self-signed ssl key and cert](https://github.com/kubernetes/kubernetes/tree/master/examples/https-nginx)
+  * self-signed ssl key and cert: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./nginx.key -out ./nginx.crt
