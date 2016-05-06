@@ -28,9 +28,8 @@ Bring up a single service running ESP+echo with one of the following
 options. For each sample below, edit the .yaml file and replace SERVICE_NAME and
 SERVICE_VERSION with the values from Step 1 above.
 
-Note the nginx.key and nginx.cert used below are self-signed ssl key and
-certificate for testing purpose only. When serving real traffic, replace
-them with your own ssl key and certificate.
+For testing purpose, you can generate self-signed nginx.key and nginx.cert using openssl:
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./nginx.key -out ./nginx.crt
 
   * Start esp+echo serving http requests only
 
@@ -58,5 +57,3 @@ them with your own ssl key and certificate.
     (swagger.yaml in this directory is a copy from this echo sample)
 
   * [echo docker image](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/managed_vms/endpoints/Dockerfile.container-engine)
-
-  * self-signed ssl key and cert: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./nginx.key -out ./nginx.crt
