@@ -39,7 +39,6 @@ spec:
       labels:
         app: esp-echo
     spec:
-      volumes:
       containers:
       - name: esp
         image: b.gcr.io/endpoints/endpoints-runtime:0.2
