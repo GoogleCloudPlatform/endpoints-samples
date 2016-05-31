@@ -12,6 +12,5 @@ pod 'GoogleSignIn'
 pod 'TwitterKit'
 
 target 'AuthenticationExample' do
-end
-target 'AuthenticationExampleSwift' do
+  pod 'AFNetworking', '~> 2.5'
 end

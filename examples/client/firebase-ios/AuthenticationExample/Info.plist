@@ -6,6 +6,8 @@
 	<string></string>
 	<key>consumerKey</key>
 	<string></string>
+	<key>SampleAPIBaseURL</key>
+	<string>https://endpoints-bookstore-node.appspot.com/shelves/1</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -35,6 +37,7 @@
 			<string>Client</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>fb+YourFacebookAppID</string>
 				<string>REVERSED_CLIENT_ID</string>
 			</array>
 		</dict>

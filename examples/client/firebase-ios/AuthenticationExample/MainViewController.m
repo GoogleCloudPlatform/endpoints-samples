@@ -16,6 +16,8 @@
 
 #import "MainViewController.h"
 #import "UIViewController+Alerts.h"
+#import <AFNetworking/AFHTTPRequestOperation.h>
+
 @import Firebase;
 @import FBSDKCoreKit;
 @import FBSDKLoginKit;
@@ -400,36 +402,58 @@ didSignInForUser:(GIDGoogleUser *)user
 
 - (IBAction)didTokenRefresh:(id)sender {
   FIRAuthTokenCallback action = ^(NSString *_Nullable token, NSError *_Nullable error) {
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:kOKButtonText
-                                                       style:UIAlertActionStyleDefault
-                                                     handler:^(UIAlertAction *action) {
-                                                       NSLog(kOKButtonText);
-                                                     }];
     if (error) {
-      UIAlertController *alertController =
-          [UIAlertController alertControllerWithTitle:kTokenRefreshErrorAlertTitle
-                                              message:error.localizedDescription
-                                       preferredStyle:UIAlertControllerStyleAlert];
-      [alertController addAction:okAction];
-      [self presentViewController:alertController animated:YES completion:nil];
+      [self alert:error.localizedDescription];
       return;
     }
 
     // Log token refresh event to Analytics.
     [FIRAnalytics logEventWithName:@"tokenrefresh" parameters:nil];
-
-    UIAlertController *alertController =
-        [UIAlertController alertControllerWithTitle:kTokenRefreshedAlertTitle
-                                            message:token
-                                     preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addAction:okAction];
-    [self presentViewController:alertController animated:YES completion:nil];
+    [self makeEndpointsRequest:token];
   };
   // [START token_refresh]
   [[FIRAuth auth].currentUser getTokenForcingRefresh:YES completion:action];
   // [END token_refresh]
 }
 
+- (void)alert:(NSString *)message {
+  UIAlertAction *okAction = [UIAlertAction actionWithTitle:kOKButtonText
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction *action) {
+                                                     NSLog(kOKButtonText);
+                                                   }];
+  UIAlertController *alertController =
+  [UIAlertController alertControllerWithTitle:@"Response"
+                                      message:message
+                               preferredStyle:UIAlertControllerStyleAlert];
+  [alertController addAction:okAction];
+  [self presentViewController:alertController animated:YES completion:nil];
+}
+
+// Call Endpoints with the access token.
+- (void)makeEndpointsRequest:(NSString *)token {
+  NSURLRequest *request = [self buildBookstoreRequest: token];
+  AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]
+                                       initWithRequest:request];
+  [operation
+   setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation,
+                                   id responseObject) {
+     [self alert: operation.responseString];
+   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+     [self alert: [error localizedDescription]];
+   }];
+  [operation start];
+}
+
+- (NSURLRequest *)buildBookstoreRequest:(NSString *)token {
+  NSString *baseURLString = [[NSBundle mainBundle]
+                             infoDictionary][@"SampleAPIBaseURL"];
+  NSMutableURLRequest *request = [NSMutableURLRequest
+                                  requestWithURL:[NSURL URLWithString:baseURLString]];
+  [request setValue:[NSString stringWithFormat:@"Bearer %@", token]
+ forHTTPHeaderField:@"Authorization"];
+  return request;
+}
 
 /** @fn setDisplayName
  @brief Changes the display name of the current user.
