@@ -218,7 +218,7 @@
                                                 <constraint firstAttribute="width" constant="123" id="hUH-8N-F8H"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <state key="normal" title="Token Refresh">
+                                            <state key="normal" title="Call API">
                                                 <color key="titleColor" red="0.0078431372550000003" green="0.53333333329999999" blue="0.81960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                                             </state>
                                             <connections>

@@ -1,16 +1,36 @@
-Firebase Authentication Quickstart
-=============================
+# Google Cloud Endpoints Firebase iOS Client
 
-Introduction
-------------
+This example is a fork of
+[quickstart-ios](https://github.com/firebase/quickstart-ios/tree/master/authentication).
+Please see `makeEndpointsRequest()` in
+`AuthenticationExample/MainViewController.m` for how to make a request
+to an API managed by Google Cloud Endpoints.
 
-- [Read more about Firebase Authentication](https://firebase.google.com/docs/auth/)
+In order to run the example you need to have [Xcode](https://developer.apple.com/xcode/)
+installed.
 
-Getting Started
----------------
+## Set up your Firebase project
 
-- [Add Firebase to your iOS Project](https://firebase.google.com/docs/ios/setup).
+* Create a Firebase project in the Firebase
+  [console](https://firebase.google.com/console/), if you don't
+  already have one. If you already have an existing Google project
+  associated with your mobile app, click Import Google
+  Project. Otherwise, click Create New Project.
 
+* Click Add Firebase to your iOS app and follow the setup steps. If
+  you're importing an existing Google project, this may happen
+  automatically and you can just download the config file.
+
+* When prompted, enter your app's bundle ID
+  (`com.google.firebase.quickstart.AuthenticationExample`). It's
+  important to enter the bundle ID your app is using; this can only be
+  set when you add an app to your Firebase project.
+
+* At the end, you'll download a GoogleService-Info.plist file. You can
+  download this file again at any time.
+
+* If you haven't done so already, copy this into your Xcode project
+  root.
 
 ### Google Sign In Setup
 - Go to the [Firebase Console](https://console.firebase.google.com) and navigate to your project:
@@ -18,8 +38,6 @@ Getting Started
   - Click **Google** and turn on the **Enable** switch, then click **Save**.
 - In XCode, add a custom URL scheme for your reversed client ID.
   - You can find this in the `GoogleService-Info.plist`
-- Run the app on your device or simulator.
-    - Select **Sign In** and select Google to begin.
 
 ### Facebook Login Setup
 - Go to the [Facebook Developers Site](https://developers.facebook.com) and follow all
@@ -33,66 +51,81 @@ Getting Started
   Facebook app you just created, e.g 124567. Save that file.
 - In the *Info* tab of your target settings add a *URL Type* with a *URL Scheme* of 'fb' + the ID
   of your Facebook app, e.g. fb1234567.
-- Run the app on your device or simulator.
-    - Select **Sign In** and select Facebook to begin.
 
-### Email/Password Setup
-- Go to the [Firebase Console](https://console.firebase.google.com) and navigate to your project:
-  - Select the **Auth** panel and then click the **Sign In Method** tab.
-  - Click **Email/Password** and turn on the **Enable** switch, then click **Save**.
-- Run the app on your device or simulator.
-    - Select **Sign In** and select Email to begin.
+## Deploy your backend
 
-### Twitter Login Setup
-- Go to the [Twitter Developers Site](https://apps.twitter.com/) and follow all
-  instructions to set up a new iOS app.
-- Go to the [Firebase Console](https://console.firebase.google.com) and navigate to your project:
-  - Select the **Auth** panel and then click the **Sign In Method** tab.
-  - Click **Twitter** and turn on the **Enable** switch, then click **Save**.
-  - Enter your Twitter **API Key** and **App Secret** and click **Save**.
-- Open your regular `Info.plist` and replace the value of the `consumerKey` and `consumerSecret` values with the keys from the Twitter app you just created.
-- Run the app on your device or simulator.
-    - Select **Sign In** and select Twitter to begin.
-- Note: you can also integrate with Twitter via Fabric using `[Fabric with:@[ [Twitter class] ]];`
+Replace the contents of `swagger.json` with the contents in
+[examples/swagger/bookstore/swagger-firebase.json](/examples/swagger/bookstore/swagger-firebase.json)
+in your backend directory.
 
-### Custom Authentication Setup
-- Go to the [Google Developers Console](https://console.developers.google.com/project) and navigate to your project:
-    - From the left "hamburger" menu navigate to the **API Manager** tab.
-    - Click on the **Credentials** item in the left column.
-    - Click **New credentials** and select **Service account key**. Select **New service account**,
-    pick any name, and select **JSON** as the key type. Then click **Create**.
-    - You should now have a new JSON file for your service account in your Downloads directory.
-- Open the file `web/auth.html` in your computer's web browser.
-    - Click **Choose File** and upload the JSON file you just downloaded.
-    - Enter any User ID and click **Generate**.
-    - Copy the token link displayed.
-- Run the app on the simulator.
-    - Select **Sign In** and select Custom to begin.
-    - Paste in the token you generated earlier.
-    - When you return to the main screen, you should see the User ID you entered when generating the
-      token.
+In the Swagger file, make sure to correctly configure Firebase auth's
+list of accepted audiences in the `audiences` property - add your
+project ID to the list. You can find the project ID in
+[Google cloud console](https://console.cloud.google.com).
 
-Support
--------
+You'll need a security segment in your Swagger file to enable Firebase
+auth.  You can add the security segment to a specific method (by
+adding it within the section for a specific HTTP path and verb), or to
+the entire API (by adding it to the root Swagger document object):
 
-- [Firebase Support](https://firebase.google.com/support/)
+    "x-security": [
+      {
+        "firebase": {
+          "audiences": [
+            "YOUR_PROJECT_ID"
+          ]
+        }
+      }
+    ]
 
-License
--------
+You'll also need a Swagger `securityDefinitions` clause to define
+Firebase as an authentication provider for your Google Cloud Endpoints
+API.
+[securityDefinitions](http://swagger.io/specification/#securityDefinitionsObject)
+is a property of the root Swagger document object:
 
-Copyright 2016 Google, Inc.
+    "securityDefinitions": {
+      "firebase": {
+        "authorizationUrl": "",
+        "flow": "implicit",
+        "type": "oauth2",
+        "x-issuer": "https://securetoken.google.com/YOUR_PROJECT_ID",
+        "x-jwks_uri": "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
+      }
+    }
 
-Licensed to the Apache Software Foundation (ASF) under one or more contributor
-license agreements.  See the NOTICE file distributed with this work for
-additional information regarding copyright ownership.  The ASF licenses this
-file to you under the Apache License, Version 2.0 (the "License"); you may not
-use this file except in compliance with the License.  You may obtain a copy of
-the License at
+Update the `host` property in the Swagger spec file, and deploy the backend.
+Instructions vary depending on what programming language you are using.  For
+example, the [Node.js Bookstore example](/examples/nodejs/bookstore) backend is
+deployed using the `gcloud deploy` command:
 
-  http://www.apache.org/licenses/LICENSE-2.0
+    gcloud --project=YOUR_PROJECT_ID preview app deploy app.yaml
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
-License for the specific language governing permissions and limitations under
-the License.
+## Call your backend from an iOS client
+
+Make sure you have `pod` installed on your system (try running `pod install`).
+If not, install it:
+
+    sudo gem install cocoapods
+
+Install project dependencies:
+
+    pod install
+
+Open `AuthenticationExample.xcworkspace` in Xcode (the easy way is to
+run `open AuthenticationExample.xcworkspace`), and update `Info.plist` as stated in 
+**Google Sign In Setup** and **Facebook Login Setup**.
+
+Run the application in Xcode. In the iOS emulator, click "Sign in" and
+select Google or Facebook. Upon successful sign-in, click the `Call
+API` link and the iOS application will request the URL stored in
+`SampleAPIBaseURL` and display the result of the call.
+
+Below is an example of the app after a successful request.
+
+![an example of the app after a successful request](screenshot.png)
+
+## Additional information
+
+Additional information on Firebase quick-start app is available at
+https://firebase.google.com/docs/ios/setup
