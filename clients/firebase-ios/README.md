@@ -52,6 +52,19 @@ installed.
 - In the *Info* tab of your target settings add a *URL Type* with a *URL Scheme* of 'fb' + the ID
   of your Facebook app, e.g. fb1234567.
 
+### Multiple Accounts Per Email Address
+
+To allow users to create multiple accounts for authentication
+providers that use the same email address.
+
+- Go to the [Firebase Console](https://console.firebase.google.com)
+  and navigate to your project:
+  - Select the **Auth** panel and then click the **Sign In Method**
+    tab.
+  - In **Advanced** seciton, click **change**.
+  - Select **Allow creation of multiple accounts with the same email
+    address** and click **Save**.
+
 ## Deploy your backend
 
 Replace the contents of `swagger.json` with the contents in
