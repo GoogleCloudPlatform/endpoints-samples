@@ -33,12 +33,21 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Demonstrate Firebase Authentication using a Facebook access token.
@@ -46,10 +55,13 @@ import com.google.firebase.auth.FirebaseUser;
 public class FacebookLoginActivity extends BaseActivity implements
         View.OnClickListener {
 
+    private static final String API_URL =
+            "https://endpoints-bookstore-node.appspot.com/shelves/1";
     private static final String TAG = "FacebookLogin";
 
     private TextView mStatusTextView;
     private TextView mDetailTextView;
+    private TextView mResponseTextView;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -70,6 +82,7 @@ public class FacebookLoginActivity extends BaseActivity implements
         // Views
         mStatusTextView = (TextView) findViewById(R.id.status);
         mDetailTextView = (TextView) findViewById(R.id.detail);
+        mResponseTextView = (TextView) findViewById(R.id.response);
         findViewById(R.id.button_facebook_signout).setOnClickListener(this);
 
         // [START initialize_auth]
@@ -198,15 +211,52 @@ public class FacebookLoginActivity extends BaseActivity implements
 
             findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
             findViewById(R.id.button_facebook_signout).setVisibility(View.VISIBLE);
+            user.getToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                @Override
+                public void onSuccess(GetTokenResult getTokenResult) {
+                    makeEndpointsRequest(getTokenResult.getToken());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    alert("Failed to get token from Firebase.");
+                }
+            });
         } else {
             mStatusTextView.setText(R.string.signed_out);
             mDetailTextView.setText(null);
+            mResponseTextView.setText("");
 
             findViewById(R.id.button_facebook_login).setVisibility(View.VISIBLE);
             findViewById(R.id.button_facebook_signout).setVisibility(View.GONE);
         }
     }
 
+    private void alert(String message) {
+        mResponseTextView.setText(message);
+    }
+
+    private void makeEndpointsRequest(String accessToken) {
+        AsyncHttpClient apiClient = new AsyncHttpClient();
+        apiClient.addHeader("Authorization", "Bearer " + accessToken);
+        apiClient.get(this, API_URL, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String response = null;
+                try {
+                    response = new String(responseBody, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    response = e.getMessage();
+                }
+                alert(response);
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                  Throwable error) {
+                alert(error.getMessage());
+            }
+        });
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

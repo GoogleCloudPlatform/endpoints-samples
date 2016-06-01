@@ -41,6 +41,11 @@
             style="@style/ThemeOverlay.MyTextDetail"
             tools:text="Firebase User ID: 123456789abc" />
 
+        <TextView
+            android:id="@+id/response"
+            style="@style/ThemeOverlay.MyTextDetail"
+            android:text="@string/calling" />
+
     </LinearLayout>
 
     <RelativeLayout

@@ -26,6 +26,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
     <string name="loading">Loading…</string>
+    <string name="calling">Calling API…</string>
     <string name="custom_token">Custom Token</string>
     <string name="signed_out">Signed Out</string>
     <string name="token_null">Token: null</string>
