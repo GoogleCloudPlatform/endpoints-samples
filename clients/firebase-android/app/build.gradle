@@ -49,6 +49,8 @@ dependencies {
     // Google Sign In SDK (only required for Google Sign In)
     compile 'com.google.android.gms:play-services-auth:9.0.1'
 
+    compile 'com.loopj.android:android-async-http:1.4.9'
+
     // Facebook Android SDK (only required for Facebook Login)
     // This is only compiled into the 'facebook' variant of this app. You can build
     // a 'nofacebook' variant to test on devices with SDK < 15.
