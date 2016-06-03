@@ -24,7 +24,7 @@ limitations under the License.
   <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <link rel="stylesheet" href="main.css">
 
   <!-- Firebase -->
@@ -33,6 +33,7 @@ limitations under the License.
        *********************************************************************************************************************** -->
 
   <script type="text/javascript">
+    var ENDPOINTS_URL = 'https://endpoints-bookstore-node.appspot.com/shelves/1';
 
     /**
      * Function called when clicking the Login/Logout button.
@@ -114,34 +115,18 @@ limitations under the License.
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           // User is signed in.
-          var displayName = user.displayName;
-          var email = user.email;
-          var emailVerified = user.emailVerified;
-          var photoURL = user.photoURL;
-          var isAnonymous = user.isAnonymous;
-          var uid = user.uid;
-          var refreshToken = user.refreshToken;
-          var providerData = user.providerData;
           // [START_EXCLUDE]
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
           document.getElementById('quickstart-sign-in').textContent = 'Sign out';
-          document.getElementById('quickstart-account-details').textContent = JSON.stringify({
-            displayName: displayName,
-            email: email,
-            emailVerified: emailVerified,
-            photoURL: photoURL,
-            isAnonymous: isAnonymous,
-            uid: uid,
-            refreshToken: refreshToken,
-            providerData: providerData
-          }, null, '  ');
+          document.getElementById('quickstart-response').textContent = 'Calling API...';
+          user.getToken().then(makeEndpointsRequest);
           // [END_EXCLUDE]
         } else {
           // User is signed out.
           // [START_EXCLUDE]
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
           document.getElementById('quickstart-sign-in').textContent = 'Sign in with Google';
-          document.getElementById('quickstart-account-details').textContent = 'null';
+          document.getElementById('quickstart-response').textContent = 'null';
           document.getElementById('quickstart-oauthtoken').textContent = 'null';
           // [END_EXCLUDE]
         }
@@ -152,6 +137,23 @@ limitations under the License.
       // [END authstatelistener]
 
       document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
+    }
+
+    function makeEndpointsRequest(token) {
+      $.ajax({
+        url: ENDPOINTS_URL,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data, status, xhr) {
+          document.getElementById('quickstart-response').textContent = JSON.stringify(data);
+        },
+        error: function (xhr, status, err) {
+          document.getElementById('quickstart-response').textContent = status;
+        },
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("Authorization", "Bearer " + token);
+        }
+      });
     }
 
     window.onload = function() {
@@ -188,8 +190,8 @@ limitations under the License.
           <!-- Container where we'll display the user details -->
           <div class="quickstart-user-details-container">
             Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
-            <div>Firebase auth <code>currentUser</code> object value:</div>
-            <pre><code id="quickstart-account-details">null</code></pre>
+            <div>Authenticated API call response:</div>
+            <pre><code id="quickstart-response">null</code></pre>
             <div>Google OAuth Access Token:</div>
             <pre><code id="quickstart-oauthtoken">null</code></pre>
           </div>
