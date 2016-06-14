@@ -42,7 +42,7 @@ sudo apt-get install -y  build-essential libssl-dev libffi-dev python-dev git py
 
 git clone https://github.com/GoogleCloudPlatform/python-docs-samples
 
-cd python-docs-samples/managed_vms/endpoints
+cd python-docs-samples/appengine/flexible/endpoints
 virtualenv env
 source env/bin/activate
 pip install -r requirements.txt
