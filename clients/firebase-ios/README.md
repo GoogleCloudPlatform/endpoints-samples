@@ -112,7 +112,7 @@ Instructions vary depending on what programming language you are using.  For
 example, the [Node.js Bookstore example](/examples/nodejs/bookstore) backend is
 deployed using the `gcloud deploy` command:
 
-    gcloud --project=YOUR_PROJECT_ID preview app deploy app.yaml
+    gcloud --project=YOUR_PROJECT_ID app deploy
 
 ## Call your backend from an iOS client
 
