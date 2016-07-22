@@ -65,7 +65,7 @@ Deploy the backend. Instructions may vary depending on what programming language
 you are using. For example, with Node.js Bookstore example backend, update
 `host` property in the Swagger spec file, and run the `gcloud deploy` command:
 
-    gcloud --project=YOUR_PROJECT_ID app deploy
+    gcloud --project=YOUR_PROJECT_ID beta app deploy
 
 ## Running
 
