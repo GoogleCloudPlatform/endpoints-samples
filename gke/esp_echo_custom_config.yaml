@@ -29,14 +29,12 @@ spec:
     app: esp-echo
   type: LoadBalancer
 ---
-apiVersion: v1
-kind: ReplicationController
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   name: esp-echo
 spec:
   replicas: 1
-  selector:
-    app: esp-echo
   template:
     metadata:
       labels:
@@ -51,7 +49,7 @@ spec:
           secretName: nginx-ssl
       containers:
       - name: esp
-        image: b.gcr.io/endpoints/endpoints-runtime:0.2
+        image: b.gcr.io/endpoints/endpoints-runtime:0.3
         args: [
           "-n", "/etc/nginx/custom/nginx.conf",
           "-s", "SERVICE_NAME",
