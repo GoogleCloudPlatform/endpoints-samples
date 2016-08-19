@@ -1,0 +1,68 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "com.google.firebase.quickstart.auth"
+        minSdkVersion 9
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    productFlavors {
+
+        // Build variant to include the Facebook Android SDk
+        // The Facebook Android SDK has a min SDK version of 15
+        facebook {
+            minSdkVersion 15
+        }
+
+        // Build variant to exclude the Facebook Android SDK
+        // Firebase Authentication has a min SDK version of 9
+        nofacebook {
+            minSdkVersion 9
+        }
+
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:23.2.1'
+
+    // Firebase Authentication
+    compile 'com.google.firebase:firebase-auth:9.0.1'
+
+    // Google Sign In SDK (only required for Google Sign In)
+    compile 'com.google.android.gms:play-services-auth:9.0.1'
+
+    compile 'com.loopj.android:android-async-http:1.4.9'
+
+    // Facebook Android SDK (only required for Facebook Login)
+    // This is only compiled into the 'facebook' variant of this app. You can build
+    // a 'nofacebook' variant to test on devices with SDK < 15.
+    facebookCompile 'com.facebook.android:facebook-android-sdk:4.9.0'
+
+    // Twitter Android SDK (only required for Twitter Login)
+    compile('com.twitter.sdk.android:twitter-core:1.6.6@aar') {
+        transitive = true
+    }
+    compile('com.twitter.sdk.android:twitter:1.13.1@aar') {
+        transitive = true;
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'

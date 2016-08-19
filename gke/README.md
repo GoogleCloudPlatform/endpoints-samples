@@ -53,7 +53,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./nginx.key -out ./n
 
 ## References
 
-  * [echo sample code](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/managed_vms/endpoints)
+  * [echo sample code](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/flexible/endpoints)
     (swagger.yaml in this directory is a copy from this echo sample)
 
-  * [echo docker image](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/managed_vms/endpoints/Dockerfile.container-engine)
+  * [echo docker image](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/appengine/flexible/endpoints/Dockerfile.container-engine)

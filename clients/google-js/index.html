@@ -1,0 +1,74 @@
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id"
+          content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <style>
+        .container-fluid {
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="jumbotron">
+        <h1>Google Cloud Endpoints Demo</h1>
+        <p>Click Sign in to call Bookstore Endpoints</p>
+        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
+        </div>
+        <div class="alert alert-success hidden" style="margin-top:20px;"
+             id="response">
+            <strong id="status"></strong>
+            <p id="message">Response</p>
+        </div>
+    </div>
+</div>
+<script>
+    function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log("Image URL: " + profile.getImageUrl());
+        console.log("Email: " + profile.getEmail());
+
+        // The ID token you need to pass to your backend:
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+        makeEndpointsRequest(id_token);
+    }
+
+    function makeEndpointsRequest(id_token) {
+        $.ajax({
+            url: "https://endpoints-bookstore-node.appspot.com/shelves/1",
+            type: 'GET',
+            dataType: 'json',
+            success: function (data, status, xhr) {
+                $("#status").text("Success!");
+                $("#message").text(JSON.stringify(data));
+                $("#response").removeClass("alert-danger").addClass("alert-success").removeClass("hidden");
+            },
+            error: function (xhr, status, err) {
+                $("#status").text("Fail!");
+                $("#message").text(status);
+                $("#response").removeClass("alert-success").addClass("alert-danger").removeClass("hidden");
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + id_token);
+            }
+        });
+    }
+</script>
+</body>
+</html>
