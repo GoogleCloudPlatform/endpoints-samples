@@ -126,7 +126,7 @@ using openssl.
    kubectl create secret generic nginx-ssl \
        --from-file=./nginx.crt --from-file=./nginx.key
 
-   # Use GKE deployment as the example.
+   # Use GKE deployment as the example here
    kubectl create -f esp_echo_gke.yaml
    ```
 
@@ -140,7 +140,7 @@ using openssl.
    # Create the k8s configmap from your prepared nginx.conf
    kubectl create configmap nginx-config --from-file=nginx.conf
 
-   # Use GKE deployment as the example.
+   # Use GKE deployment as the example here
    kubectl create -f esp_echo_custom_config_gke.yaml
    ```
 
