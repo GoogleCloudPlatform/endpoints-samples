@@ -27,7 +27,7 @@ Kubernetes cluster that can run anywhere as long as it has internet access.
 
 ## Configuring Endpoints
 
-To configure Endpoints, replace YOUR-PROJECT-ID with your own project ID in
+To configure Endpoints, replace `YOUR-PROJECT-ID` with your own project ID in
 the [swagger.yaml](swagger.yaml) configuration file:
     
    ```
@@ -67,8 +67,8 @@ To deploy to the cluster:
 
 1. Edit the Kubernetes configuration file,
 i.e. [esp_echo_http.yaml](esp_echo_http.yaml),
-replacing SERVICE_NAME and SERVICE_VERSION shown in the snippet below with the
-values returned when you deployed the API:
+replacing `SERVICE_NAME` and `SERVICE_VERSION` shown in the snippet below with
+the values returned when you deployed the API:
 
    ```
    containers:
@@ -110,10 +110,10 @@ values returned when you deployed the API:
    kubectl create -f esp_echo_http_gke.yaml
    ```
 
-## Add SSL Support
+## (Optional) Add SSL Support
 
-Have your SSL key and certificate ready as nginx.key and nginx.crt.
-For testing purpose, you can generate self-signed nginx.key and nginx.cert
+Have your SSL key and certificate ready as `nginx.key` and `nginx.crt`.
+For testing purpose, you can generate self-signed `nginx.key` and `nginx.cert`
 using openssl.  
 
    ```
@@ -129,7 +129,7 @@ using openssl.
    kubectl create -f esp_echo_gke.yaml
    ```
 
-## Use Your Custom `nginx.conf`
+## (Optional) Use Your Custom `nginx.conf`
 
    ```
    # Create secret from your prepared nginx creds
