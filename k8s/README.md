@@ -39,7 +39,7 @@ the [swagger.yaml](swagger.yaml) configuration file:
    host: "YOUR-PROJECT-ID.appspot.com"
    ```
 
-## Deploying the sample API
+## Deploying the sample API config to Google Service Management
 
 To deploy the sample application:
 
@@ -61,7 +61,7 @@ version of the API.
 2. Make a note of the service name and the service version because you'll need
 them later when you configure the container cluster for the API.
 
-## Deploying the sample API to the cluster #
+## Deploying the sample API to the cluster
 
 To deploy to the cluster:
 
