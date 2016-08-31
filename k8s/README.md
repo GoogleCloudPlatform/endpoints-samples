@@ -111,7 +111,7 @@ the values returned when you deployed the API:
    kubectl create -f esp_echo_http_gke.yaml
    ```
 
-## (Optional) Add SSL Support
+## (Optional) Add SSL support
 
 Have your SSL key and certificate ready as `nginx.key` and `nginx.crt`.
 For testing purpose, you can generate self-signed `nginx.key` and `nginx.cert`
@@ -130,7 +130,7 @@ using openssl.
    kubectl create -f esp_echo_gke.yaml
    ```
 
-## (Optional) Use Your Custom `nginx.conf`
+## (Optional) Use your custom `nginx.conf`
 
    ```
    # Create the k8s secret from your prepared nginx creds
