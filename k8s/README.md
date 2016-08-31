@@ -190,7 +190,7 @@ To send a request to the API
   * Otherwise:
 
     ```
-    NODE_PORT=`kubectl get service esp-echo --output='jsonpath="{.spec.ports[0].nodePort}"'`
+    NODE_PORT=`kubectl get service esp-echo --output='jsonpath={.spec.ports[0].nodePort}'`
 
     MINIKUBE_IP=`minikube ip`
 
