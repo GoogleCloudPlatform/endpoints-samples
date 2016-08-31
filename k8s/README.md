@@ -65,7 +65,8 @@ them later when you configure the container cluster for the API.
 
 To deploy to the cluster:
 
-1. Edit the Kubernetes configuration file [esp_echo_http.yaml](esp_echo_http.yaml),
+1. Edit the Kubernetes configuration file,
+i.e. [esp_echo_http.yaml](esp_echo_http.yaml),
 replacing SERVICE_NAME and SERVICE_VERSION shown in the snippet below with the
 values returned when you deployed the API:
 
