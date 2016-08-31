@@ -87,19 +87,20 @@ the values returned when you deployed the API:
    Note you also need to change the service type from LoadBalancer to NodePort
    if you use [MiniKube](http://kubernetes.io/docs/getting-started-guides/minikube/)
 
-2. [Create your service account credentials](https://cloud.google.com/storage/docs/authentication#generating-a-private-key)
-   from Google API Console. Not needed for
-   [GKE](https://cloud.google.com/container-engine/).
+2. (Not necessary if you kubernetes cluster is on [GKE](https://cloud.google.com/container-engine/)
+   Create your service account credentials
 
-  * Save your credential as `service-account-creds.json`
 
-3. Deploy the service account credentials to the cluster. Not needed for GKE.
+  * Download your credential as `service-account-creds.json` from
+    [Google API Console](https://cloud.google.com/storage/docs/authentication#generating-a-private-key)
+
+  * Deploy the service account credentials to the cluster.
 
    ```
    kubectl create secret generic service-account-creds --from-file=service-account-creds.json
    ```
 
-4. Start the service using the kubectl create command:
+3. Start the service using the kubectl create command:
 
    ```
    kubectl create -f esp_echo_http.yaml
