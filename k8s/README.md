@@ -125,7 +125,7 @@ using openssl.
        --from-file=./nginx.crt --from-file=./nginx.key
 
    # Use GKE deployment as the example.
-   kubectl create -f esp_echo.yaml
+   kubectl create -f esp_echo_gke.yaml
    ```
 
 ## Use Your Custom `nginx.conf`
@@ -139,7 +139,7 @@ using openssl.
    kubectl create configmap nginx-config --from-file=nginx.conf
 
    # Use GKE deployment as the example.
-   kubectl create -f esp_echo_custom_config.yaml
+   kubectl create -f esp_echo_custom_config_gke.yaml
    ```
 
 ## Get the service's external IP address (skip this step if you use Minikube)
