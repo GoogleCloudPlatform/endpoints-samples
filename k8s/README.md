@@ -61,7 +61,7 @@ version of the API.
 2. Make a note of the service name and the service version because you'll need
 them later when you configure the container cluster for the API.
 
-# Deploying the sample API to the cluster #
+## Deploying the sample API to the cluster #
 
 To deploy to the cluster:
 
@@ -87,11 +87,11 @@ values returned when you deployed the API:
    if you use [MiniKube](http://kubernetes.io/docs/getting-started-guides/minikube/)
 
 2. [Create your service account credentials](https://cloud.google.com/storage/docs/authentication#generating-a-private-key)
-   from Google API Console.
+   from Google API Console. Not needed for GKE (Google Container Engine).
 
   * Save your credential as `service-account-creds.json`
 
-3. Deploy the service account credentials to the cluster:
+3. Deploy the service account credentials to the cluster. Not needed for GKE.
 
    ```
    kubectl create secret generic service-account-creds --from-file=service-account-creds.json
@@ -101,6 +101,45 @@ values returned when you deployed the API:
 
    ```
    kubectl create -f esp_echo_http.yaml
+   ```
+   
+   or use `esp_echo_http_gke.yaml` on GKE
+
+   ```
+   kubectl create -f esp_echo_http_gke.yaml
+   ```
+
+## Add SSL Support
+
+Have your SSL key and certificate ready as nginx.key and nginx.crt.
+For testing purpose, you can generate self-signed nginx.key and nginx.cert
+using openssl.  
+
+   ```
+   # For testing purpose only
+   openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+       -keyout ./nginx.key -out ./nginx.crt
+
+   # Create secret from your prepared nginx creds
+   kubectl create secret generic nginx-ssl \
+       --from-file=./nginx.crt --from-file=./nginx.key
+
+   # Use GKE deployment as the example.
+   kubectl create -f esp_echo.yaml
+   ```
+
+## Use Your Custom `nginx.conf`
+
+   ```
+   # Create secret from your prepared nginx creds
+   kubectl create secret generic nginx-ssl \
+       --from-file=./nginx.crt --from-file=./nginx.key
+
+   # Create the configmap from your prepared nginx.conf
+   kubectl create configmap nginx-config --from-file=nginx.conf
+
+   # Use GKE deployment as the example.
+   kubectl create -f esp_echo_custom_config.yaml
    ```
 
 ## Get the service's external IP address (skip this step if you use Minikube)
