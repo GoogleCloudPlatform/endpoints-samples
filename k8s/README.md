@@ -121,7 +121,7 @@ using openssl.
    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
        -keyout ./nginx.key -out ./nginx.crt
 
-   # Create secret from your prepared nginx creds
+   # Create the k8s secret from your prepared nginx creds
    kubectl create secret generic nginx-ssl \
        --from-file=./nginx.crt --from-file=./nginx.key
 
@@ -132,11 +132,11 @@ using openssl.
 ## (Optional) Use Your Custom `nginx.conf`
 
    ```
-   # Create secret from your prepared nginx creds
+   # Create the k8s secret from your prepared nginx creds
    kubectl create secret generic nginx-ssl \
        --from-file=./nginx.crt --from-file=./nginx.key
 
-   # Create the configmap from your prepared nginx.conf
+   # Create the k8s configmap from your prepared nginx.conf
    kubectl create configmap nginx-config --from-file=nginx.conf
 
    # Use GKE deployment as the example.
