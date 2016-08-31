@@ -76,11 +76,11 @@ the values returned when you deployed the API:
        image: b.gcr.io/endpoints/endpoints-runtime:0.3
        command: [
          "/usr/sbin/start_esp.py",
-         "-p", "8080",
-         "-a", "127.0.0.1:8081",
+         "-p", "8080",            // the port ESP listens on
+         "-a", "127.0.0.1:8081",  // backend address
          "-s", "SERVICE_NAME",
          "-v", "SERVICE_VERSION",
-         "-k", "/etc/nginx/creds/service-account-creds.json",
+         "-k", "/etc/nginx/creds/service-account-creds.json",  // not needed for GKE
        ]
    ```
 
