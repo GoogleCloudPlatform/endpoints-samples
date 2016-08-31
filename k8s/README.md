@@ -88,7 +88,8 @@ the values returned when you deployed the API:
    if you use [MiniKube](http://kubernetes.io/docs/getting-started-guides/minikube/)
 
 2. [Create your service account credentials](https://cloud.google.com/storage/docs/authentication#generating-a-private-key)
-   from Google API Console. Not needed for GKE (Google Container Engine).
+   from Google API Console. Not needed for
+   [GKE](https://cloud.google.com/container-engine/).
 
   * Save your credential as `service-account-creds.json`
 
