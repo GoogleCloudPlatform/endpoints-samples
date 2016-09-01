@@ -1,4 +1,4 @@
-# Run ESP on Kubernetes
+# Run ESP (Endpoints Server Proxy) on Kubernetes
 
 This document describes how to run ESP with
 [Google Cloud Endpoints](https://cloud.google.com/endpoints/) integration on a
