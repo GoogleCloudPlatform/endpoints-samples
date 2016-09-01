@@ -1,12 +1,6 @@
-# Run ESP (Extensible Service Proxy) on Kubernetes
+# Run ESP on Kubernetes
 
-ESP is an [NGINX](http://nginx.org)-based proxy
-which enables API management capabilities for JSON/REST API services.
-It provides authentication (auth0, gitkit), API key validation,
-as well as API-level monitoring, tracing and logging.
- 
-This document describes how to run ESP (packaged as a docker image
-`b.gcr.io/endpoints/endpoints-runtime:0.3`) with
+This document describes how to run ESP with
 [Google Cloud Endpoints](https://cloud.google.com/endpoints/) integration on a
 Kubernetes cluster that can run anywhere as long as it has internet access.
 
