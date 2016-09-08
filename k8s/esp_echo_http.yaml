@@ -45,8 +45,7 @@ spec:
       containers:
         - name: esp
           image: b.gcr.io/endpoints/endpoints-runtime:0.3
-          command: [
-            "/usr/sbin/start_esp.py",
+          args: [
             "-p", "8080",
             "-a", "127.0.0.1:8081",
             "-s", "SERVICE_NAME",
