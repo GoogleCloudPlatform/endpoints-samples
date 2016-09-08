@@ -79,6 +79,7 @@ the values returned when you deployed the API:
    ```
    containers:
      - name: esp
+       image: b.gcr.io/endpoints/endpoints-runtime:0.3
        args: [
          "-p", "8080",            # the port ESP listens on
          "-a", "127.0.0.1:8081",  # the backend address
