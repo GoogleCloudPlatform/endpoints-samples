@@ -4,7 +4,7 @@ The Extensible Service Proxy, a.k.a. ESP, is an [NGINX](http://nginx.org)-based 
 that sits in front of your backend code. It processes incoming traffic to
 provide auth, API Key management, logging, and other Endpoints
 API Management features.
- 
+
 This document describes how to run ESP (packaged as a docker image
 `gcr.io/endpoints-release/endpoints-runtime:1`) with
 [Google Cloud Endpoints](https://cloud.google.com/endpoints/) integration on a
@@ -115,7 +115,7 @@ the values returned when you deployed the API:
    ```
    kubectl create -f esp_echo_http.yaml
    ```
-   
+
    or use `esp_echo_http_gke.yaml` on GKE
 
    ```
@@ -206,6 +206,36 @@ To send a request to the API
 
     curl -d '{"message":"hello world"}' -H "content-type:application/json" ${MINIKUBE_IP}:${NODE_PORT}/echo?key=${ENDPOINTS_KEY}
     ```
+
+## Using GCE L7 Load Balancer with ESP
+
+[GLBC](https://github.com/kubernetes/contrib/tree/master/ingress/controllers/gce) is a Kubernetes ingress controller
+that configures external loadbalancers. We can use GLBC to route traffic from an external IP address to an ESP-enabled
+Kubernetes service. By default, [Google Container Engine](https://cloud.google.com/container-engine/) deploys GLBC as a
+cluster addon. If you do not use Google Container Engine, then you need to
+[install GLBC](https://github.com/kubernetes/contrib/tree/master/ingress/controllers/gce) in your cluster.
+
+To use GLBC with ESP, we need to create an ingress resource in addition to a service and a deployment.
+Edit the file `esp_echo_gke_ingress.yaml` and replace service name and config version with your values.
+Notice that we use `-z` flag and a `readinessProbe` to define a health-checking endpoint on the application
+port. Deploy these resources to your cluster:
+
+
+  ```
+  kubectl create -f esp_echo_gke_ingress.yaml
+  ```
+
+You can check the status of your ingress using the following command:
+
+  ```
+  kubectl describe ingress
+  ```
+
+Once you obtain an external address, we can send a request to the echo backend:
+
+  ```
+  curl -d '{"message":"hello world"}' -H "content-type:application/json" http://${INGRESS_IP_ADDRESS}/echo?key=${ENDPOINTS_KEY}
+  ```
 
 ## References
 
