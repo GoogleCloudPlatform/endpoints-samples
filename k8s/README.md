@@ -92,7 +92,7 @@ the values returned when you deployed the API:
    Note you also need to change the service type from LoadBalancer to NodePort
    if you use [MiniKube](http://kubernetes.io/docs/getting-started-guides/minikube/)
 
-2. (Not necessary if your kubernetes cluster is on [GKE](https://cloud.google.com/container-engine/)
+2. (Not necessary if your kubernetes cluster is on [GKE](https://cloud.google.com/container-engine/))
    Create your service account credentials
 
 
