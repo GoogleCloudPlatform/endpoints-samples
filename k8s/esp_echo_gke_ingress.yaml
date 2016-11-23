@@ -40,12 +40,12 @@ spec:
     spec:
       containers:
       - name: esp
-        image: b.gcr.io/endpoints/endpoints-runtime:latest
+        image: b.gcr.io/endpoints/endpoints-runtime:1
         args: [
           "-p", "8080",
           "-a", "127.0.0.1:8081",
           "-s", "SERVICE_NAME",
-          "-v", "SERVICE_VERSION",
+          "-v", "SERVICE_CONFIG_ID",
           "-z", "healthz",
         ]
         readinessProbe:
@@ -67,6 +67,8 @@ spec:
   rules:
   - http:
       paths:
+      # The path is the URL prefix for the service, e.g. /api/* or just /*
+      # Note that the service will receive the entire URL with the prefix
       - path: /*
         backend:
           serviceName: esp-echo
