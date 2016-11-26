@@ -34,7 +34,7 @@ Kubernetes cluster that can run anywhere as long as it has internet access.
 ## Configuring Endpoints
 
 To configure Endpoints, replace `YOUR-PROJECT-ID` with your own project ID in
-the [swagger.yaml](swagger.yaml) configuration file:
+the [openapi.yaml](openapi.yaml) configuration file:
     
    ```
    swagger: "2.0"
@@ -52,7 +52,7 @@ To deploy the sample application:
 1. Invoke the following command:
 
    ```
-   gcloud beta service-management deploy swagger.yaml
+   gcloud beta service-management deploy openapi.yaml
    ```
 
    The command returns several lines of information, including a line similar to the following:
