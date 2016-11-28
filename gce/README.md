@@ -9,7 +9,7 @@ This repository provides a template and instructions for setting up an API scala
 
 [globally_available_service.py](./globally_available_service.py) is a Google Cloud Deployment Manager Template. If you are not already familiar with Deployment Manager check out [the docs](https://cloud.google.com/deployment-manager/docs/). To use this template with your own API follow the directions below:
 
-### Step 1: Prepare and deploy your service's Swagger API specification.
+### Step 1: Prepare and deploy your service's Open API specification.
 
     gcloud alpha service-management deploy swagger.json
 
