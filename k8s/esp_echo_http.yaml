@@ -49,7 +49,7 @@ spec:
             "-p", "8080",
             "-a", "127.0.0.1:8081",
             "-s", "SERVICE_NAME",
-            "-v", "SERVICE_CONFIG",
+            "-v", "SERVICE_CONFIG_ID",
             "-k", "/etc/nginx/creds/service-account-creds.json",
           ]
           ports:
