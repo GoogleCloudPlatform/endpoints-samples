@@ -39,12 +39,12 @@ spec:
     spec:
       containers:
       - name: esp
-        image: b.gcr.io/endpoints/endpoints-runtime:0.3
+        image: b.gcr.io/endpoints/endpoints-runtime:1
         args: [
           "-p", "8080",
           "-a", "127.0.0.1:8081",
           "-s", "SERVICE_NAME",
-          "-v", "SERVICE_VERSION",
+          "-v", "SERVICE_CONFIG_ID",
         ]
         ports:
           - containerPort: 8080
