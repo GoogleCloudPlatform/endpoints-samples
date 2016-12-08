@@ -1,9 +1,11 @@
+# [START add_project]
 swagger: "2.0"
 info:
   description: "A simple Google Cloud Endpoints API example."
   title: "Endpoints Example"
   version: "1.0.0"
 host: "YOUR-PROJECT-ID.appspot.com"
+# [END add_project]
 basePath: "/"
 consumes:
 - "application/json"
