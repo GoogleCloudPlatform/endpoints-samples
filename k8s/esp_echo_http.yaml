@@ -38,10 +38,13 @@ spec:
       labels:
         app: esp-echo
     spec:
+      # [START secret-1]
       volumes:
         - name: service-account-creds
           secret:
             secretName: service-account-creds
+      # [END secret-1]
+      # [START service]
       containers:
         - name: esp
           image: b.gcr.io/endpoints/endpoints-runtime:1
@@ -52,12 +55,15 @@ spec:
             "-v", "SERVICE_CONFIG_ID",
             "-k", "/etc/nginx/creds/service-account-creds.json",
           ]
+      # [END service]
           ports:
             - containerPort: 8080
+          # [START secret-2]
           volumeMounts:
             - mountPath: /etc/nginx/creds
               name: service-account-creds
               readOnly: true
+          # [END secret-2]
         - name: echo
           image: b.gcr.io/endpoints/echo:latest
           ports:
