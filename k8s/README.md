@@ -97,7 +97,7 @@ the values returned when you deployed the API:
 
 
   * Download your credential as `service-account-creds.json` from
-    [Google API Console](https://cloud.google.com/storage/docs/authentication#generating-a-private-key). Make sure you selected the following roles when creating your service account key:
+    [Google API Console](https://cloud.google.com/storage/docs/authentication#generating-a-private-key). Make sure you selected the following roles when creating your service account key (Note you need to scroll down the role selection menu to find the second and third roles):
     
     * Project -> Viewer
     * Cloud Trace -> Cloud Trace Agent
