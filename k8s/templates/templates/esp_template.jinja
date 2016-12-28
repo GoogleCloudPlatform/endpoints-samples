@@ -69,7 +69,7 @@ spec:
       {% endif %}
       containers:
         - name: esp
-          image: b.gcr.io/endpoints/endpoints-runtime:0.3
+          image: gcr.io/endpoints-runtime/endpoints-runtime:1
           args: [
               {% if CUSTOM_CONFIG %}
               "-n",

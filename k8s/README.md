@@ -6,7 +6,7 @@ provide auth, API Key management, logging, and other Endpoints
 API Management features.
  
 This document describes how to run ESP (packaged as a docker image
-`b.gcr.io/endpoints/endpoints-runtime:0.3`) with
+`gcr.io/endpoints-release/endpoints-runtime:1`) with
 [Google Cloud Endpoints](https://cloud.google.com/endpoints/) integration on a
 Kubernetes cluster that can run anywhere as long as it has internet access.
 
@@ -79,7 +79,7 @@ the values returned when you deployed the API:
    ```
    containers:
      - name: esp
-       image: b.gcr.io/endpoints/endpoints-runtime:1
+       image: gcr.io/endpoints-release/endpoints-runtime:1
        args: [
          "-p", "8080",            # the port ESP listens on
          "-a", "127.0.0.1:8081",  # the backend address

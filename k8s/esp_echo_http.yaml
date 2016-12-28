@@ -47,7 +47,7 @@ spec:
       # [START service]
       containers:
         - name: esp
-          image: b.gcr.io/endpoints/endpoints-runtime:1
+          image: gcr.io/endpoints-release/endpoints-runtime:1
           args: [
             "-p", "8080",
             "-a", "127.0.0.1:8081",
@@ -65,6 +65,6 @@ spec:
               readOnly: true
           # [END secret-2]
         - name: echo
-          image: b.gcr.io/endpoints/echo:latest
+          image: gcr.io/endpoints-release/echo:latest
           ports:
             - containerPort: 8081

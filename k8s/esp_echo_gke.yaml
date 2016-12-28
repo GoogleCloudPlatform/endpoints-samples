@@ -47,7 +47,7 @@ spec:
           secretName: nginx-ssl
       containers:
       - name: esp
-        image: b.gcr.io/endpoints/endpoints-runtime:1
+        image: gcr.io/endpoints-release/endpoints-runtime:1
         args: [
           "-p", "8080",
           "-S", "443",
@@ -63,6 +63,6 @@ spec:
           name: nginx-ssl
           readOnly: true
       - name: echo
-        image: b.gcr.io/endpoints/echo:latest
+        image: gcr.io/endpoints-release/echo:latest
         ports:
           - containerPort: 8081
