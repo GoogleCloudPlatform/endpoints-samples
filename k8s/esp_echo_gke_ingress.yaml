@@ -55,7 +55,7 @@ spec:
         ports:
           - containerPort: 8080
       - name: echo
-        image: b.gcr.io/endpoints/echo:latest
+        image: gcr.io/endpoints-release/echo:latest
         ports:
           - containerPort: 8081
 ---
