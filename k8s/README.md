@@ -237,6 +237,8 @@ Once you obtain an external address, we can send a request to the echo backend:
   curl -d '{"message":"hello world"}' -H "content-type:application/json" http://${INGRESS_IP_ADDRESS}/echo?key=${ENDPOINTS_KEY}
   ```
 
+If you do not see a response from ESP immediately, please wait for a couple of minutes and retry.
+
 ## References
 
   * [echo sample code](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/flexible/endpoints)
