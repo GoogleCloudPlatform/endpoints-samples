@@ -42,7 +42,7 @@ the [openapi.yaml](openapi.yaml) configuration file:
      description: "A simple Google Cloud Endpoints API example."
      title: "Endpoints Example"
      version: "1.0.0"
-   host: "YOUR-PROJECT-ID.appspot.com"
+   host: "YOUR-PROJECT-ID.cloud.goog"
    ```
 
 ## Deploying the sample API config to Google Service Management
