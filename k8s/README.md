@@ -42,7 +42,7 @@ the [openapi.yaml](openapi.yaml) configuration file:
      description: "A simple Google Cloud Endpoints API example."
      title: "Endpoints Example"
      version: "1.0.0"
-   host: "YOUR-PROJECT-ID.cloud.goog"
+   host: host: "echo-api.endpoints.YOUR-PROJECT-ID.cloud.goog"
    ```
 
 ## Deploying the sample API config to Google Service Management
@@ -52,19 +52,18 @@ To deploy the sample application:
 1. Invoke the following command:
 
    ```
-   gcloud beta service-management deploy openapi.yaml
+   gcloud service-management deploy openapi.yaml
    ```
 
    The command returns several lines of information, including a line similar to the following:
 
    ```
-   Service Configuration with version "2016-04-27R2" uploaded for service "YOUR-PROJECT-ID.appspot.com"
+   Service Configuration [2017-02-13-r2] uploaded for service [echo-api.endpoints.example-project.cloud.goog]
    ```
 
-   Note that the version number that displayed will change when you deploy a new
-version of the API.
+   Note that the configuration ID that is displayed will change when you deploy a new version of the API.
 
-2. Make a note of the service name and the service version because you'll need
+2. Make a note of the service name and the service configuration ID because you'll need
 them later when you configure the container cluster for the API.
 
 ## Deploying the sample API to the cluster
