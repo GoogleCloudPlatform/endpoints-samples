@@ -1,0 +1,10 @@
+URL: https://github.com/auth0/auth0-angular/tree/f0253cfa1778e620c94c6d5c4ece4332c013c22a/examples/widget-with-api
+Version: f0253cf
+License: MIT
+License File: LICENSE
+
+Description:
+Auth0 AugularJS webapp that calls Endpoints.
+
+Local Modifications:
+Please see git log.

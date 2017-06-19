@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  img(src="#{user.picture}")
+  h2 Welcome #{user.displayName}!
+  h4 Here is your book information:  #{res}
+  br
+  a(href='/logout') Logout
