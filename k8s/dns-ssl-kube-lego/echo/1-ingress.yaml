@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: echo-ingress
+  namespace: echo
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "gce"
+spec:
+  tls:
+  - hosts:
+    - "echo.endpoints.[PROJECT_ID].cloud.goog"
+    secretName: echo-tls
+  rules:
+  - host: "echo.endpoints.[PROJECT_ID].cloud.goog"
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: echo-service
+          servicePort: 80
