@@ -49,11 +49,11 @@ spec:
       - name: esp
         image: gcr.io/endpoints-release/endpoints-runtime:1
         args: [
-          "-p", "8080",
-          "-S", "443",
-          "-a", "127.0.0.1:8081",
-          "-s", "SERVICE_NAME",
-          "-v", "SERVICE_CONFIG_ID",
+          "--http_port", "8080",
+          "--ssl_port", "443",
+          "--backend", "127.0.0.1:8081",
+          "--service", "SERVICE_NAME",
+          "--version", "SERVICE_CONFIG_ID",
         ]
         ports:
           - containerPort: 8080
