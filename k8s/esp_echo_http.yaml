@@ -49,11 +49,11 @@ spec:
         - name: esp
           image: gcr.io/endpoints-release/endpoints-runtime:1
           args: [
-            "-p", "8080",
-            "-a", "127.0.0.1:8081",
-            "-s", "SERVICE_NAME",
-            "-v", "SERVICE_CONFIG_ID",
-            "-k", "/etc/nginx/creds/service-account-creds.json",
+            "--http_port", "8080",
+            "--backend", "127.0.0.1:8081",
+            "--service", "SERVICE_NAME",
+            "--version", "SERVICE_CONFIG_ID",
+            "--service_account_key", "/etc/nginx/creds/service-account-creds.json",
           ]
       # [END service]
           ports:
