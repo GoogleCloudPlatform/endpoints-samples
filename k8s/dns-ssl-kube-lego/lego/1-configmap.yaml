@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-lego
+  namespace: kube-lego
+data:
+  # This email address is used by Let's Encrypt to send expiration emails.
+  # See https://letsencrypt.org/docs/expiration-emails/ for more details.
+  lego.email: "[YOUR_EMAIL_ADDRESS_HERE]"
+
+  # Use LetsEncrypt's production backend.
+  lego.url: "https://acme-v01.api.letsencrypt.org/directory"
