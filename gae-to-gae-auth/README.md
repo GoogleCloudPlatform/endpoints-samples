@@ -36,13 +36,11 @@ use for each task as long as you keep them consistent).
 export GREETING=YOUR-GREETING-PROJECT-NAME
 export RELAY=YOUR-RELAY-PROJECT-NAME
 ```
-
-1. Clone this repository.
+2. Clone this repository.
 ```
 git clone https://github.com/GoogleCloudPlatform/endpoints-samples
 ```
-
-1. Change directories to `gae-to-gae-auth`.
+3. Change directories to `gae-to-gae-auth`.
 ```
 cd gae-to-gae-auth
 ```
@@ -55,7 +53,7 @@ cd greeting_app
 ./deploy.sh "$GREETING" "$RELAY"
 ```
 
-1. Send an unauthenticated request to your application.
+2. Send an unauthenticated request to your application.
 ```
 curl -X POST -H "Content-Length: 0" "https://${GREETING}.appspot.com/_ah/api/greeting/v1/greet"
 ```
@@ -87,18 +85,18 @@ to send an authenticated request to the greeting API.
 under your greeting project with the name *my-service-account*. Save the
 service account credentials as JSON under the `./client` directory.
 
-1. Change directories to the client.
+2. Change directories to the client.
 ```
 cd ../client
 ```
 
-1. Setup your client and virtualenv.
+3. Setup your client and virtualenv.
 ```
 ./setup.sh
 source py27-venv/bin/activate
 ```
 
-1. Use the client to send an authenticated request to your greeting server.
+4. Use the client to send an authenticated request to your greeting server.
 Replace `YOUR_SERVICE_ACCOUNT_FILE` with the name of the service account JSON
 credentials you downloaded previously.
 ```
@@ -111,7 +109,7 @@ You should see a message that looks like:
 }
 ```
 
-1. Deactivate the virtualenv used for the client.
+5. Deactivate the virtualenv used for the client.
 ```
 deactivate
 ```
@@ -124,12 +122,12 @@ deactivate
 cd ../relay_app
 ```
 
-1. Deploy the relay.
+2. Deploy the relay.
 ```
 ./deploy.sh "$GREETING" "$RELAY"
 ```
 
-1. Send an unauthenticated request to the relay.
+3. Send an unauthenticated request to the relay.
 ```
 curl "https://${RELAY}.appspot.com/_ah/api/relay/v1/relay"
 ```
