@@ -1,0 +1,28 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+service: default
+
+handlers:
+- url: /_ah/api/.*
+  script: main.api
+
+libraries:
+- name: pycrypto
+  version: '2.6'
+- name: ssl
+  version: '2.7.11'
+
+skip_files:
+- ^py27-venv$
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^lib/setuptools/script \(dev\).tmpl$
+
+env_variables:
+  ENDPOINTS_SERVICE_NAME: "${SERVICE}"
+  ENDPOINTS_SERVICE_VERSION: "${CONFIG_VERSION}"
+  SERVER_PROJECT_ID: "${BACKEND}"

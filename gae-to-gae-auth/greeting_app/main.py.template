@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+
+import argparse
+import logging
+import os
+
+import endpoints
+from protorpc import message_types
+from protorpc import messages
+from protorpc import remote
+
+
+AUDIENCE = "YOUR_PROJECT_ID.appspot.com"
+
+SHELL_SERVICE_ACCOUNT = "my-service-account@YOUR_PROJECT_ID.iam.gserviceaccount.com"
+CLIENT_SERVICE_ACCOUNT = "CLIENT_PROJECT_ID@appspot.gserviceaccount.com"
+
+
+def ServiceAccountIssuer(service_account):
+    return endpoints.Issuer(
+        issuer=service_account,
+        jwks_uri="https://www.googleapis.com/robot/v1/metadata/x509/{}".format(
+            service_account),
+    )
+
+
+class Greeting(messages.Message):
+    """Greeting that stores a message."""
+    message = messages.StringField(1)
+
+
+@endpoints.api(
+    name='greeting',
+    version='v1',
+    issuers={
+        'shell_service_account': ServiceAccountIssuer(SHELL_SERVICE_ACCOUNT),
+        'default_service_account': ServiceAccountIssuer(CLIENT_SERVICE_ACCOUNT),
+    },
+    audiences={
+        'shell_service_account': [AUDIENCE],
+        'default_service_account': [AUDIENCE],
+    },
+)
+class GreetingApi(remote.Service):
+
+    @endpoints.method(
+        message_types.VoidMessage,
+        Greeting,
+        path='greet',
+        http_method='POST',
+        name='greet',
+    )
+    def greet(self, request):
+        # user is a google.appengine.api.users.User
+        # https://cloud.google.com/appengine/docs/standard/python/refdocs/modules/google/appengine/api/users#User
+        # with the following fields:
+        #  - email()
+        #  - nickname()
+        #  - user_id()
+        #  - auth_domain()
+        user = endpoints.get_current_user()
+        if user is None:
+            raise endpoints.UnauthorizedException("Missing or invalid token")
+
+        return Greeting(message='Hello, {}'.format(user.email()))
+
+
+api = endpoints.api_server([GreetingApi])

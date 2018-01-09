@@ -1,0 +1,237 @@
+#!/usr/bin/env python
+
+
+import base64
+import httplib2
+import json
+import logging
+import time
+import urllib
+import os
+
+import endpoints
+from google.appengine.api import app_identity
+
+import oauth2client.client
+from protorpc import message_types
+from protorpc import messages
+from protorpc import remote
+
+
+GOOGLE_ID_AUDIENCE = "https://www.googleapis.com/oauth2/v4/token"
+AUDIENCE = "GREETINGS-PROJECT-ID.appspot.com"
+BACKEND_URI = (
+    "https://GREETINGS-PROJECT-ID.appspot.com/_ah/api/greeting/v1/greet")
+
+# Token creation
+# ------------------------------------------------------------------------------
+
+
+def make_signed_jwt(audience, subject=None, ttl_seconds=3600, **kwargs):
+    """Generate a JWT token signed by the App Engine default service account.
+
+    Args:
+      audience: (str) The recipients that the JWT is intended for.
+
+    Keyword arguments:
+      subject: (str) An optional claim that identifies the subject of the JWT.
+      ttl_seconds: (int) The time, in seconds, after which the JWT will not
+        be accepted.
+      **kwargs: Any additional keyword arguments are encoded as JSON in the
+        payload of the JWT.
+    """
+    now = int(time.time())
+
+    header = {
+        "typ": "JWT",
+        "alg": "RS256",
+    }
+
+    if subject is None:
+      subject = app_identity.get_service_account_name()
+
+    payload = {
+        "iat": now,
+        "exp": now + ttl_seconds,
+        "iss": app_identity.get_service_account_name(),
+        "email": app_identity.get_service_account_name(),
+        "aud": audience,
+        "sub": subject,
+    }
+    payload.update(**kwargs)
+    logging.debug("JWT header: %r and payload: %r", header, payload)
+
+    header_and_payload = '{}.{}'.format(
+        base64.urlsafe_b64encode(json.dumps(header)),
+        base64.urlsafe_b64encode(json.dumps(payload)),
+    )
+
+    (key_name, signature) = app_identity.sign_blob(header_and_payload)
+    signed_jwt = '{}.{}'.format(
+        header_and_payload, base64.urlsafe_b64encode(signature))
+
+    return signed_jwt
+
+
+def make_google_id_token(audience, **kwargs):
+    """Request a Google ID token using a JWT."""
+    params = {
+        'grant_type': 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+        'assertion': make_signed_jwt(
+            audience=GOOGLE_ID_AUDIENCE, target_audience=audience, **kwargs),
+    }
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    http = httplib2.Http()
+    response, content = http.request(
+        uri="https://www.googleapis.com/oauth2/v4/token",
+        method="POST",
+        body=urllib.urlencode(params),
+        headers=headers,
+    )
+    assert (response.status == 200), (response, content)
+    content = json.loads(content)
+    return content['id_token']
+
+
+# Wrapper class to hold JWT credentials
+# ------------------------------------------------------------------------------
+
+class SignedJwtCredentials(oauth2client.client.Credentials):
+    def __init__(self, audience):
+        self._token = None
+        self._expiration = None
+        self._audience = audience
+
+    def authorize(self, http):
+        plain_request = http.request
+
+        def auth_request(
+            uri,
+            method='GET',
+            body=None,
+            headers=None,
+            redirections=httplib2.DEFAULT_MAX_REDIRECTS,
+            connection_type=None,
+        ):
+            if headers is None:
+                headers = {}
+            self.apply(headers)
+            return plain_request(
+                uri=uri,
+                method=method,
+                body=body,
+                headers=headers,
+                redirections=redirections,
+                connection_type=connection_type,
+            )
+
+        http.request = auth_request
+        return http
+
+    def refresh(self, http):
+        ttl=3600
+        self._token = make_signed_jwt(audience=self._audience, ttl_seconds=ttl)
+        self._expiration = time.time() + ttl
+
+    # def revoke(self, http):
+    #     pass
+
+    def apply(self, headers):
+        headers['Authorization'] = 'Bearer {}'.format(
+            self.get_or_refresh_token())
+
+    def get_or_refresh_token(self):
+        if (self._expiration is None) or (self._expiration - time.time() < 300):
+            # Renew JWT token if TTL is less than 5 minutes
+            self.refresh(http=None)
+        return self._token
+
+# Methods to relay a request to another backend server.
+# ------------------------------------------------------------------------------
+
+
+
+def make_backend_request(token):
+    """Makes a request to the auth info endpoint for Google ID token."""
+    headers = {'Authorization': 'Bearer {}'.format(token)}
+    http = httplib2.Http()
+    response, content = http.request(
+        uri=BACKEND_URI,
+        method="POST",
+        body='',
+        headers=headers,
+    )
+    return (response, content)
+
+
+def make_backend_request_with_credentials():
+    """Makes a request to the auth info endpoint for Google ID token."""
+    credentials = SignedJwtCredentials(audience=AUDIENCE)
+    http = credentials.authorize(httplib2.Http())
+
+    response, content = http.request(
+        uri=BACKEND_URI,
+        method="POST",
+        body='',
+        headers={},
+    )
+    return (response, content)
+
+
+# ------------------------------------------------------------------------------
+
+
+
+
+class RelayResponse(messages.Message):
+  """A proto Message that contains a simple string field."""
+  content = messages.StringField(1)
+
+
+@endpoints.api(
+    name='relay',
+    version='v1',
+)
+class RelayApi(remote.Service):
+
+  @endpoints.method(
+      response_message=RelayResponse,
+      path='relay',
+      http_method='GET',
+      name='relay',
+  )
+  def default(self, request):
+    response, content = make_backend_request_with_credentials()
+    if response.status == 200:
+        return RelayResponse(content=content)
+    elif response.status == 401:
+        # Endpoints will return HTTP code 401 if the call either
+        # - doesn't have an authentication token
+        # - has an invalid token
+        raise endpoints.UnauthorizedException(
+            "Call to Greeting service was unauthorized")
+    else:
+        raise (response, content)
+
+  @endpoints.method(
+      response_message=RelayResponse,
+      path='google_id',
+      http_method='GET',
+      name='google_id',
+  )
+  def google_id(self, request):
+    token = make_google_id_token(audience=AUDIENCE)
+    response, content = make_backend_request(token=token)
+    if response.status == 200:
+        return RelayResponse(content=content)
+    elif response.status == 401:
+        # Endpoints will return HTTP code 401 if the call either
+        # - doesn't have an authentication token
+        # - has an invalid token
+        raise endpoints.UnauthorizedException(
+            "Call to Greeting service was unauthorized")
+    else:
+        raise (response, content)
+
+
+api = endpoints.api_server([RelayApi])
