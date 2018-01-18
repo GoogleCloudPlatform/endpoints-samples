@@ -32,7 +32,6 @@ from protorpc import messages
 from protorpc import remote
 
 
-GOOGLE_ID_AUDIENCE = "https://www.googleapis.com/oauth2/v4/token"
 AUDIENCE = "GREETINGS-PROJECT-ID.appspot.com"
 BACKEND_URI = (
     "https://GREETINGS-PROJECT-ID.appspot.com/_ah/api/greeting/v1/greet")
@@ -86,25 +85,6 @@ def make_signed_jwt(audience, subject=None, ttl_seconds=3600, **kwargs):
 
     return signed_jwt
 
-
-def make_google_id_token(audience, **kwargs):
-    """Request a Google ID token using a JWT."""
-    params = {
-        'grant_type': 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-        'assertion': make_signed_jwt(
-            audience=GOOGLE_ID_AUDIENCE, target_audience=audience, **kwargs),
-    }
-    headers = {"Content-Type": "application/x-www-form-urlencoded"}
-    http = httplib2.Http()
-    response, content = http.request(
-        uri="https://www.googleapis.com/oauth2/v4/token",
-        method="POST",
-        body=urllib.urlencode(params),
-        headers=headers,
-    )
-    assert (response.status == 200), (response, content)
-    content = json.loads(content)
-    return content['id_token']
 
 
 # Wrapper class to hold JWT credentials
@@ -226,26 +206,5 @@ class RelayApi(remote.Service):
             "Call to Greeting service was unauthorized")
     else:
         raise (response, content)
-
-  @endpoints.method(
-      response_message=RelayResponse,
-      path='google_id',
-      http_method='GET',
-      name='google_id',
-  )
-  def google_id(self, request):
-    token = make_google_id_token(audience=AUDIENCE)
-    response, content = make_backend_request(token=token)
-    if response.status == 200:
-        return RelayResponse(content=content)
-    elif response.status == 401:
-        # Endpoints will return HTTP code 401 if the call either
-        # - doesn't have an authentication token
-        # - has an invalid token
-        raise endpoints.UnauthorizedException(
-            "Call to Greeting service was unauthorized")
-    else:
-        raise (response, content)
-
 
 api = endpoints.api_server([RelayApi])

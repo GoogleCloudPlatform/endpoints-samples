@@ -55,7 +55,10 @@ cd greeting_app
 
 2. Send an unauthenticated request to your application.
 ```
-curl -X POST -H "Content-Length: 0" "https://${GREETING}.appspot.com/_ah/api/greeting/v1/greet"
+curl \
+    --request POST \
+    --data "" \
+    "https://${GREETING}.appspot.com/_ah/api/greeting/v1/greet"
 ```
 You should see an error like this:
 ```
