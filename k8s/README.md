@@ -72,8 +72,7 @@ To deploy to the cluster:
 
 1. Edit the Kubernetes configuration file,
 i.e. [esp_echo_http.yaml](esp_echo_http.yaml),
-replacing `SERVICE_NAME` and `SERVICE_CONFIG_ID` shown in the snippet below with
-the values returned when you deployed the API:
+replacing `SERVICE_NAME` shown in the snippet below with the value returned when you deployed the API:
 
    ```
    containers:
@@ -83,7 +82,7 @@ the values returned when you deployed the API:
          "-p", "8080",            # the port ESP listens on
          "-a", "127.0.0.1:8081",  # the backend address
          "-s", "SERVICE_NAME",
-         "-v", "SERVICE_CONFIG_ID",
+         "--rollout_strategy", "managed",
          "-k", "/etc/nginx/creds/service-account-creds.json",  # not needed for GKE
        ]
    ```

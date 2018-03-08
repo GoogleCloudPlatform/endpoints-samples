@@ -53,7 +53,7 @@ spec:
           "--ssl_port", "443",
           "--backend", "127.0.0.1:8081",
           "--service", "SERVICE_NAME",
-          "--version", "SERVICE_CONFIG_ID",
+          "--rollout_strategy", "managed",
         ]
         ports:
           - containerPort: 8080
