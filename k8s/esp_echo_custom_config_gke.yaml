@@ -53,7 +53,7 @@ spec:
         args: [
           "-n", "/etc/nginx/custom/nginx.conf",
           "-s", "SERVICE_NAME",
-          "-v", "SERVICE_CONFIG_ID",
+          "--rollout_strategy", "managed",
         ]
         ports:
           - containerPort: 8080

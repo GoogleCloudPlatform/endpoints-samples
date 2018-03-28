@@ -63,8 +63,7 @@ To deploy the sample application:
 
    Note that the configuration ID that is displayed will change when you deploy a new version of the API.
 
-2. Make a note of the service name and the service configuration ID because you'll need
-them later when you configure the container cluster for the API.
+2. Make a note of the service name because you'll need it later when you configure the container cluster for the API.
 
 ## Deploying the sample API to the cluster
 
@@ -72,8 +71,7 @@ To deploy to the cluster:
 
 1. Edit the Kubernetes configuration file,
 i.e. [esp_echo_http.yaml](esp_echo_http.yaml),
-replacing `SERVICE_NAME` and `SERVICE_CONFIG_ID` shown in the snippet below with
-the values returned when you deployed the API:
+replacing `SERVICE_NAME` shown in the snippet below with the value returned when you deployed the API:
 
    ```
    containers:
@@ -83,7 +81,7 @@ the values returned when you deployed the API:
          "-p", "8080",            # the port ESP listens on
          "-a", "127.0.0.1:8081",  # the backend address
          "-s", "SERVICE_NAME",
-         "-v", "SERVICE_CONFIG_ID",
+         "--rollout_strategy", "managed",
          "-k", "/etc/nginx/creds/service-account-creds.json",  # not needed for GKE
        ]
    ```
