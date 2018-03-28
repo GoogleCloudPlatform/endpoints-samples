@@ -63,8 +63,7 @@ To deploy the sample application:
 
    Note that the configuration ID that is displayed will change when you deploy a new version of the API.
 
-2. Make a note of the service name and the service configuration ID because you'll need
-them later when you configure the container cluster for the API.
+2. Make a note of the service name because you'll need it later when you configure the container cluster for the API.
 
 ## Deploying the sample API to the cluster
 
