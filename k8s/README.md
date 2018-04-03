@@ -52,7 +52,7 @@ To deploy the sample application:
 1. Invoke the following command:
 
    ```
-   gcloud service-management deploy openapi.yaml
+   gcloud endpoints services deploy openapi.yaml
    ```
 
    The command returns several lines of information, including a line similar to the following:
