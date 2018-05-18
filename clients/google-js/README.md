@@ -1,4 +1,4 @@
-# Google Cloudendpoints ID Token Javascript Client
+# Cloud Endpoints JavaScript client using Google ID Token
 
 Please see `makeEndpointsRequest()` in `index.html`
 for how to make a request to an API managed by Google Cloud Endpoints.
@@ -17,45 +17,26 @@ for how to make a request to an API managed by Google Cloud Endpoints.
 
 ## Deploy your backend
 
-Start Google Cloud Endpoints and the bookstore backend. The whole API surface,
-or a specific method must be configured to accept Google ID Token auth.
+Edit the OpenAPI document for your API, typically `openapi.yaml`, and make sure 
+the API surface, or a specific methods, are configured to accept Google ID Tokens.
 
-Replace the `swagger.json` in your backend directory with
-[examples/swagger/bookstore/swagger-google-id-token.json](/examples/swagger/bookstore/swagger-google-id-token.json).
-The `swagger-google-id-token.json` configures the API to require authentication
-via Google ID Token on the whole API surface.
+In particular, your OpenAPI document might include a security definition entry that
+looks like the following:
 
-In your Swagger file, make sure to correctly configure Google ID Token
-list of accepted audiences in the `audiences` property - add your Client ID to
-the list.
+    google_id_token:
+      authorizationUrl: ""
+      flow: "implicit"
+      type: "oauth2"
+      x-google-issuer: "https://accounts.google.com"
+      x-google-jwks_uri: "https://www.googleapis.com/oauth2/v3/certs"
+      # Your OAuth2 client's Client ID must be added here.
+      # You can add multiple client IDs to accept tokens form multiple clients.
+      x-google-audiences: "YOUR-CLIENT-ID"
 
-This segment enables Google ID token on a specific method (if applied
-to a specific HTTP path and verb in your Swagger):
+And individual methods can be labeled with the following security annotation:
 
-    "x-security": [
-      {
-        "google_id_token": {
-          "audiences": [
-            "YOUR_CLIENT_ID"
-          ]
-        }
-      }
-    ]
-
-Use the Swagger `securityDefinitions` clause to define Google Id Token
-as an authentication provider for your Google Cloud Endpoints API.
-[securityDefinitions](http://swagger.io/specification/#securityDefinitionsObject)
-is a property of the root Swagger document object:
-
-    "securityDefinitions": {
-      "google_id_token": {
-        "authorizationUrl": "",
-        "flow": "implicit",
-        "type": "oauth2",
-        "x-issuer": "https://accounts.google.com",
-        "x-jwks_uri": "https://www.googleapis.com/oauth2/v1/certs"
-      },
-    }
+    security:
+    - google_id_token: []
 
 If your API is hosted on a different domain than the enclosing page,
 please make sure your backend handles
