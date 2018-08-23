@@ -1,18 +1,19 @@
-# [START add_project]
+# [START swagger]
 swagger: "2.0"
 info:
   description: "A simple Google Cloud Endpoints API example."
   title: "Endpoints Example"
   version: "1.0.0"
 host: "echo-api.endpoints.YOUR-PROJECT-ID.cloud.goog"
-# [END add_project]
-basePath: "/"
+# [END swagger]
 consumes:
 - "application/json"
 produces:
 - "application/json"
 schemes:
-- "https"
+# Uncomment the next line if you configure SSL for this API.
+#- "https"
+- "http"
 paths:
   "/echo":
     post:
@@ -32,6 +33,8 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/echoMessage"
+      security:
+      - api_key: []
   "/auth/info/googlejwt":
     get:
       description: "Returns the requests' authentication information."
@@ -40,15 +43,13 @@ paths:
       - "application/json"
       responses:
         200:
-          description: "Authenication info."
+          description: "Authentication info."
           schema:
             $ref: "#/definitions/authInfoResponse"
-      x-security:
-      - google_jwt:
-          audiences:
-          # This must match the "aud" field in the JWT. You can add multiple
-          # audiences to accept JWTs from multiple clients.
-          - "echo.endpoints.sample.google.com"
+      security:
+      - google_jwt: []
+      - gae_default_service_account: []
+      - google_service_account: []
   "/auth/info/googleidtoken":
     get:
       description: "Returns the requests' authentication information."
@@ -57,17 +58,28 @@ paths:
       - "application/json"
       responses:
         200:
-          description: "Authenication info."
+          description: "Authentication info."
           schema:
             $ref: "#/definitions/authInfoResponse"
-      x-security:
-      - google_id_token:
-          audiences:
-          # Your OAuth2 client's Client ID must be added here. You can add
-          # multiple client IDs to accept tokens from multiple clients.
-          - "YOUR-CLIENT-ID"
+      security:
+      - google_id_token: []
+  "/auth/info/firebase":
+    get:
+      description: "Returns the requests' authentication information."
+      operationId: "authInfoFirebase"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authentication info."
+          schema:
+            $ref: "#/definitions/authInfoResponse"
+      security:
+      - firebase: []
+
 definitions:
   echoMessage:
+    type: "object"
     properties:
       message:
         type: "string"
@@ -77,15 +89,14 @@ definitions:
         type: "string"
       email:
         type: "string"
-# This section requires all requests to any path to require an API key.
-security:
-- api_key: []
+# [START securityDef]
 securityDefinitions:
   # This section configures basic authentication with an API key.
   api_key:
     type: "apiKey"
     name: "key"
     in: "query"
+# [END securityDef]
   # This section configures authentication using Google API Service Accounts
   # to sign a json web token. This is mostly used for server-to-server
   # communication.
@@ -97,6 +108,34 @@ securityDefinitions:
     x-google-issuer: "jwt-client.endpoints.sample.google.com"
     # Update this with your service account's email address.
     x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/YOUR-SERVICE-ACCOUNT-EMAIL"
+    # This must match the "aud" field in the JWT. You can add multiple audiences to accept JWTs from multiple clients.
+    x-google-audiences: "echo.endpoints.sample.google.com"
+  # This section configures authentication using Google App Engine default
+  # service account to sign a json web token. This is mostly used for
+  # server-to-server communication.
+  gae_default_service_account:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    # Replace YOUR-CLIENT-PROJECT-ID with your client project ID.
+    x-google-issuer: "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
+    # Replace YOUR-CLIENT-PROJECT-ID with your client project ID.
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
+    # This must match the "aud" field in the JWT. You can add multiple audiences to accept JWTs from multiple clients.
+    x-google-audiences: "echo.endpoints.sample.google.com"
+  # This section configures authentication using a service account
+  # to sign a json web token. This is mostly used for server-to-server
+  # communication.
+  google_service_account:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    # Replace YOUR-SERVICE-ACCOUNT-EMAIL with your service account email.
+    x-google-issuer: "YOUR-SERVICE-ACCOUNT-EMAIL"
+    # Replace YOUR-SERVICE-ACCOUNT-EMAIL with your service account email.
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/YOUR-SERVICE-ACCOUNT-EMAIL"
+    # This must match the "aud" field in the JWT. You can add multiple audiences to accept JWTs from multiple clients.
+    x-google-audiences: "echo.endpoints.sample.google.com"
   # This section configures authentication using Google OAuth2 ID Tokens.
   # ID Tokens can be obtained using OAuth2 clients, and can be used to access
   # your API on behalf of a particular user.
@@ -104,5 +143,17 @@ securityDefinitions:
     authorizationUrl: ""
     flow: "implicit"
     type: "oauth2"
-    x-google-issuer: "accounts.google.com"
-    x-google-jwks_uri: "https://www.googleapis.com/oauth2/v1/certs"
+    x-google-issuer: "https://accounts.google.com"
+    x-google-jwks_uri: "https://www.googleapis.com/oauth2/v3/certs"
+    # Your OAuth2 client's Client ID must be added here. You can add multiple client IDs to accept tokens form multiple clients.
+    x-google-audiences: "YOUR-CLIENT-ID"
+  # This section configures authentication using Firebase Auth.
+  # [START firebaseAuth]
+  firebase:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    x-google-issuer: "https://securetoken.google.com/YOUR-PROJECT-ID"
+    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
+    x-google-audiences: "YOUR-PROJECT-ID"
+  # [END firebaseAuth]
