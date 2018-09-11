@@ -1,6 +1,6 @@
 # Deploying Endpoints APIs on Google Compute Engine
 
-This repository provides a template and instructions for setting up an API scalably on Google Compute Engine using Managed Instance Groups, Load Balancers, and Autoscalers. For a single instance setup walkthrough check out the [Endpoints Compute Engine doc](https://cloud.google.com/endpoints/docs/gce)
+This repository provides a template and instructions for setting up an API scalably on Google Compute Engine using Managed Instance Groups, Load Balancers, and Autoscalers. For a single instance setup walkthrough check out the [Endpoints Compute Engine documentation](https://cloud.google.com/endpoints/docs/gce)
 
 ## Using GCE Startup Scripts
 
