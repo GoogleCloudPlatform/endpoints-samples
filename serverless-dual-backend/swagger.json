@@ -1,0 +1,175 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample Endpoints for Serverless API",
+    "version": "1.0.0",
+    "title": "Vehicles"
+  },
+  "host": "CLOUD RUN APP HOSTNAME",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "x-google-backend": {
+    "address": "APP ENGINE ADDRESS",
+    "jwt_audience": "IAP OAUTH2 CLIENT ID"
+  },
+  "paths": {
+    "/vehicles": {
+      "get": {
+        "summary": "Return a list of user's vehicles",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "ListVehicles",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "schema": {
+              "$ref": "#/definitions/ListVehiclesResponse"
+            }
+          }
+        }
+      }
+    },
+    "/vehicle": {
+      "post": {
+        "summary": "Creates a new vehicle belonging to the user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "CreateVehicle",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "vehicle",
+            "description": "Vehicle to be added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response"
+          }
+        }
+      }
+    },
+    "/vehicle/{plate}": {
+      "get": {
+        "summary": "Lists notes for a vehicle belonging to the user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "ListNotes",
+        "parameters": [
+          {
+            "name": "plate",
+            "in": "path",
+            "description": "license plate",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "schema": {
+              "$ref": "#/definitions/ListNotesResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a note for a vehicle",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "AddNote",
+	"x-google-backend": {
+	  "address": "CLOUD FUNCTION ADDRESS"
+	},
+        "parameters": [
+          {
+            "name": "plate",
+            "in": "path",
+            "description": "license plate",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "note",
+            "description": "Note to be added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Vehicle": {
+      "type": "object",
+      "properties": {
+        "plate": {
+          "type": "string"
+        }
+      }
+    },
+    "Note": {
+      "type": "object",
+      "properties": {
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "ListVehiclesResponse": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Vehicle"
+      }
+    },
+    "ListNotesResponse": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Note"
+      }
+    }
+  },
+  "security": [
+    {
+      "google_id_token": []
+    }
+  ],
+  "securityDefinitions": {
+    "google_id_token": {
+      "authorizationUrl": "",
+      "flow": "implicit",
+      "type": "oauth2",
+      "x-google-issuer": "https://accounts.google.com"
+    }
+  }
+}
