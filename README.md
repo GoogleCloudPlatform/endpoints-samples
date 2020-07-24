@@ -1,9 +1,9 @@
 # Using Endpoints on Google Compute Engine or Container Engine
 
-This repository contains samples and utilities for using Google Cloud Endpoints v2 on Compute Engine or Container Engine
+This repository contains samples and utilities for using Google Cloud Endpoints on GCE(Google Compute Engine) or GKE(Google Kubernetes Engine)
 
-Folder structures:
-* gettting-started: ESPv2 GKE depolyment yaml files used Cloud Endpoint [tutorials](https://cloud.google.com/endpoints/docs/openapi/tutorials).
-* gke: ESPv2 deployment yaml files for GKE.
-* kubernetes: ESPv2 deployment yaml files for k8s. They all need to mount a service account key file.
-* k8s: The mixed GKE and k8s deployment files for legacy ESPv1. If a file is for GKE, it has `_gke` in the file name.
+## Repository Structure:
+* [gettting-started](gettting-started): ESPv2 Google Kubernetes Engine depolyment yaml files used in Cloud Endpoint [tutorials](https://cloud.google.com/endpoints/docs/openapi/tutorials).
+* [gke](gke): ESPv2 deployment yaml files for Google Kubernetes Engine.
+* [kubernetes](kubernetes): ESPv2 deployment yaml files for Kubernetes. It is almost the same as GKE except that they all need to mount a service account key file to te ESP container.
+* [k8s](k8s): ESPv1 deployment files for mixed GKE(Google Kubernetes Engine) and Kubernetes deployment. If a file is for GKE, it has `_gke` in the file name, otherwise it is for Kubernetes.
