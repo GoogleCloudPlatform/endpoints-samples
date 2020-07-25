@@ -42,10 +42,10 @@ spec:
       - name: esp
         image: gcr.io/endpoints-release/endpoints-runtime:2
         args: [
-          "--listener_port", "8080",
-          "--backend", "127.0.0.1:8081",
-          "--service", "SERVICE_NAME",
-          "--rollout_strategy", "managed",
+          "--listener_port=8080",
+          "--backend=127.0.0.1:8081",
+          "--service=SERVICE_NAME",
+          "--rollout_strategy=managed",
         ]
         ports:
           - containerPort: 8080
