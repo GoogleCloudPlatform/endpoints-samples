@@ -31,12 +31,15 @@ spec:
     app: esp-grpc-bookstore
   type: LoadBalancer
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: esp-grpc-bookstore
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: esp-grpc-bookstore
   template:
     metadata:
       labels:
@@ -44,31 +47,31 @@ spec:
     spec:
       # [START secret-1]
       volumes:
-        - name: service-account-creds
-          secret:
-            secretName: service-account-creds
+      - name: service-account-creds
+        secret:
+          secretName: service-account-creds
       # [END secret-1]
       # [START service]
       containers:
-        - name: esp
-          image: gcr.io/endpoints-release/endpoints-runtime:2
-          args: [
-            "--listener_port=9000",
-            "--service=SERVICE_NAME",
-            "--rollout_strategy=managed",
-            "--backend=grpc://127.0.0.1:8000",
-            "--service_account_key=/etc/esp/creds/service-account-creds.json",
-          ]
-      # [END service]
+      - name: esp
+        image: gcr.io/endpoints-release/endpoints-runtime:2
+        args: [
+          "--listener_port=9000",
+          "--service=SERVICE_NAME",
+          "--rollout_strategy=managed",
+          "--backend=grpc://127.0.0.1:8000",
+          "--service_account_key=/etc/esp/creds/service-account-creds.json",
+        ]
+        # [END service]
         ports:
-          - containerPort: 9000
-          # [START secret-2]
-          volumeMounts:
-            - mountPath: /etc/esp/creds
-              name: service-account-creds
-              readOnly: true
-          # [END secret-2]
+        - containerPort: 9000
+        # [START secret-2]
+        volumeMounts:
+        - mountPath: /etc/esp/creds
+          name: service-account-creds
+          readOnly: true
+        # [END secret-2]
       - name: bookstore
         image: gcr.io/endpointsv2/python-grpc-bookstore-server:1
         ports:
-          - containerPort: 8000
+        - containerPort: 8000
