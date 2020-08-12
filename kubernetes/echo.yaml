@@ -27,12 +27,15 @@ spec:
     app: esp-echo
   type: LoadBalancer
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: esp-echo
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: esp-echo
   template:
     metadata:
       labels:
@@ -55,16 +58,15 @@ spec:
           "--rollout_strategy=managed",
           "--service_account_key=/etc/esp/creds/service-account-creds.json"
         ]
+        # [END secret-2]
         ports:
           - containerPort: 8080
-      # [END service]
-        ports:
-          # [START secret-2]
-          volumeMounts:
-            - mountPath: /etc/esp/creds
-              name: service-account-creds
-              readOnly: true
-          # [END secret-2]
+        # [START secret-2]
+        volumeMounts:
+          - mountPath: /etc/esp/creds
+            name: service-account-creds
+            readOnly: true
+        # [END secret-2]
       - name: echo
         image: gcr.io/endpoints-release/echo:latest
         ports:
