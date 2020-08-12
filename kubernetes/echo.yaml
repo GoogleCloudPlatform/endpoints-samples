@@ -33,6 +33,9 @@ metadata:
   name: esp-echo
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: esp-echo
   template:
     metadata:
       labels:
