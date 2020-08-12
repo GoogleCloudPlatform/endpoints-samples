@@ -27,12 +27,15 @@ spec:
     app: esp-echo
   type: LoadBalancer
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: esp-echo
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: esp-echo
   template:
     metadata:
       labels:
@@ -53,7 +56,7 @@ spec:
           "--backend=127.0.0.1:8081",
           "--service=SERVICE_NAME",
           "--rollout_strategy=managed",
-          "--service_account_key=/etc/esp/creds/service-account-creds.json"
+          "--service_account_key=/etc/esp/creds/service-account-creds.json",
         ]
         ports:
           - containerPort: 8080
