@@ -20,6 +20,7 @@ metadata:
 spec:
   ports:
   - port: 443
+    targetPort: 9000
     protocol: TCP
     name: https
   selector:
@@ -45,14 +46,14 @@ spec:
       - name: esp
         image: gcr.io/endpoints-release/endpoints-runtime:2
         args: [
-          "--listener_port", "443",
+          "--listener_port", "9000",
           "--backend", "127.0.0.1:8081",
           "--service", "SERVICE_NAME",
           "--rollout_strategy", "managed",
           "--ssl_server_cert_path", "/etc/esp/ssl",
         ]
         ports:
-          - containerPort: 443
+          - containerPort: 9000
         volumeMounts:
         - mountPath: /etc/esp/ssl
           name: esp-ssl
