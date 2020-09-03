@@ -27,12 +27,15 @@ spec:
     app: esp-echo
   type: NodePort
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: esp-echo
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: esp-echo
   template:
     metadata:
       labels:
@@ -59,7 +62,7 @@ spec:
         ports:
           - containerPort: 8081
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: example
