@@ -12,10 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: grpc-hello
+spec:
+  backend:
+    serviceName: grpc-hello # Name of the Service targeted by the Ingress
+    servicePort: 80 # Should match the port used by the Service
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: grpc-hello
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
   ports:
   - port: 80
@@ -24,7 +35,7 @@ spec:
     name: http
   selector:
     app: grpc-hello
-  type: LoadBalancer
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -48,7 +59,12 @@ spec:
           "--backend=grpc://127.0.0.1:50051",
           "--service=SERVICE_NAME",
           "--rollout_strategy=managed",
+          "--healthz=/healthz",
         ]
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 9000
         ports:
           - containerPort: 9000
       - name: python-grpc-hello
