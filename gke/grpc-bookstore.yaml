@@ -30,7 +30,7 @@ spec:
     secretName: esp-ssl
   backend:
     serviceName: esp-grpc-bookstore
-    servicePort: 80
+    servicePort: 443
 ---
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
@@ -48,12 +48,12 @@ metadata:
   name: esp-grpc-bookstore
   annotations:
     service.alpha.kubernetes.io/app-protocols: '{"esp-grpc-bookstore":"HTTP2"}'
-    cloud.google.com/neg: '{"ingress": true, "exposed_ports": {"80":{}}}'
+    cloud.google.com/neg: '{"ingress": true, "exposed_ports": {"443":{}}}'
     cloud.google.com/backend-config: '{"default": "esp-grpc-bookstore"}'
 spec:
   ports:
-  # Port that accepts gRPC and JSON/HTTP2 requests over HTTP.
-  - port: 80
+  # Port that accepts gRPC and JSON/HTTP2 requests over TLS.
+  - port: 443
     targetPort: 9000
     protocol: TCP
     name: esp-grpc-bookstore
