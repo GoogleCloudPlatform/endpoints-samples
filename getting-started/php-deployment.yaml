@@ -12,10 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: esp-echo
+spec:
+  backend:
+    serviceName: esp-echo # Name of the Service targeted by the Ingress
+    servicePort: 80 # Should match the port used by the Service
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: esp-echo
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
   ports:
   - port: 80
@@ -24,7 +35,7 @@ spec:
     name: http
   selector:
     app: esp-echo
-  type: LoadBalancer
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,8 +60,13 @@ spec:
           "--backend", "127.0.0.1:8080",
           "--service", "SERVICE_NAME",
           "--rollout_strategy", "managed",
+          "--healthz=/healthz",
         ]
       # [END esp]
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
         ports:
           - containerPort: 8081
       - name: echo
