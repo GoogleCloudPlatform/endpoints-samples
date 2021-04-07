@@ -27,6 +27,7 @@ metadata:
   name: esp-echo
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
+    cloud.google.com/backend-config: '{"default": "esp-echo"}'
 spec:
   ports:
   - port: 80
@@ -36,6 +37,16 @@ spec:
   selector:
     app: esp-echo
   type: ClusterIP
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: esp-echo
+spec:
+  healthCheck:
+    type: HTTP
+    requestPath: /healthz
+    port: 8081
 ---
 apiVersion: apps/v1
 kind: Deployment
