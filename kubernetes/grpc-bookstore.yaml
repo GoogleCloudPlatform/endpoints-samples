@@ -60,7 +60,7 @@ spec:
           "--service=SERVICE_NAME",
           "--rollout_strategy=managed",
           "--backend=grpc://127.0.0.1:8000",
-          "--non_gpc",
+          "--non_gcp",
           "--service_account_key=/etc/esp/creds/service-account-creds.json",
         ]
         # [END service]
