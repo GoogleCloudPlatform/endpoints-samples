@@ -25,7 +25,7 @@ This repository provides a template and instructions for setting up an API scala
 
 ### Step 2: Upload a startup script and (optionally) a nginx config.
 
-This repository provides an example [startup.sh](./startup.sh) script that installs the Extensible Service Proxy (ESP) directly on your GCE instance. This particular startup script installs the example API provided in [python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/managed_vms/endpoints). However, by replacing the code between the comments you can repurpose this script for your own API. After you have done this, upload it to a cloud storage bucket in your project, and note the path.
+This repository provides an example [startup.sh](./startup.sh) script that installs the Extensible Service Proxy (ESP) directly on your GCE instance. This particular startup script installs the example API provided in [python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/endpoints/getting-started). However, by replacing the code between the comments you can repurpose this script for your own API. After you have done this, upload it to a cloud storage bucket in your project, and note the path.
 
 If you want to customize the configuration of the ESP, you can also upload an `nginx.conf` file to the Cloud Storage
 
