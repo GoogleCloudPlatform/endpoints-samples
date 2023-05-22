@@ -33,7 +33,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: esp-echo
+      app: echo-app
   template:
     metadata:
       labels:
