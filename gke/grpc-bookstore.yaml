@@ -16,7 +16,7 @@
 # and the container for the Extensible Service Proxy (ESP) to
 # Google Kubernetes Engine (GKE).
 
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: esp-grpc-bookstore
@@ -28,9 +28,11 @@ spec:
   - hosts:
     - SERVICE_NAME
     secretName: esp-ssl
-  backend:
-    serviceName: esp-grpc-bookstore
-    servicePort: 443
+  defaultBackend:
+    service:
+      name: esp-grpc-bookstore
+      port:
+        number: 443
 ---
 apiVersion: cloud.google.com/v1
 kind: BackendConfig

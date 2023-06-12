@@ -62,7 +62,7 @@ spec:
         ports:
           - containerPort: 8081
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: example
@@ -74,5 +74,7 @@ spec:
       # Note that the service will receive the entire URL with the prefix
       - path: /*
         backend:
-          serviceName: esp-echo
-          servicePort: 80
+          service:
+            name: esp-echo
+            port:
+              number: 80
