@@ -30,7 +30,7 @@ sudo apt-get update
 sudo apt-get install -y endpoints-runtime
 
 if [ $NGINX_CONF_URL ]; then
-    gsutil cp $NGINX_CONF_URL /etc/nginx/nginx.conf
+    gcloud storage cp $NGINX_CONF_URL /etc/nginx/nginx.conf
 fi
 
 # Use restart in case there is a custom config
